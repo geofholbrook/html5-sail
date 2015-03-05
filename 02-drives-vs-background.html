@@ -1,0 +1,160 @@
+<html> 
+
+	<head>
+		<title>HTML5 CANVAS TEMPLATE</title> 
+		<script type="text/javascript" src="lib/math.js" ></script>	
+	</head>
+
+	<body> 
+
+	<canvas id="myCanvas" width="800" height="500" >
+		fallback
+	</canvas> 
+
+	<script>
+
+		var bs = 35;  //boatsize
+		var boatColor = "#cd4236";
+ 		var boatAngle = 0;
+ 		var boatSpeed = 0;
+
+ 		var position = { x: 0, y: 0 };
+
+		// xy coords of boat facing East.
+		var boatCoords = [ 	pol2car(bs, 0),
+							pol2car(bs/2, rad2deg(70)),
+							pol2car(bs, rad2deg(160)),
+							pol2car(bs, rad2deg(-160)),
+							pol2car(bs/2, rad2deg(-70)) ] ;
+
+		function drawBoat() {
+
+			ctx.save();
+			ctx.rotate(boatAngle);
+
+			ctx.fillStyle = boatColor;
+			
+			ctx.beginPath();
+			ctx.moveTo (boatCoords[0].x, boatCoords[0].y);
+			ctx.lineTo (boatCoords[1].x, boatCoords[1].y);
+			ctx.lineTo (boatCoords[2].x, boatCoords[2].y);
+			ctx.lineTo (boatCoords[3].x, boatCoords[3].y);
+			ctx.lineTo (boatCoords[4].x, boatCoords[4].y);
+			ctx.closePath();
+			ctx.fill();
+
+			ctx.restore();
+		
+		}
+
+		function drawBG() {
+
+			ctx.save();
+
+			ctx.translate( position.x, position.y)  // changes reference for water pattern
+
+			ctx.fillStyle = bgPatt;
+
+			// coords adjusted to correspond to canvas
+		    ctx.fillRect(-can.width/2 - position.x, -can.height/2 - position.y, 
+		    			  can.width   + position.x,  can.height   + position.y);  
+
+		    ctx.restore();
+		}
+
+
+
+		function updatePos() {
+
+			if (waterImage.width > 0) {
+				position = { x: ((position.x - Math.cos(boatAngle)*boatSpeed) + waterImage.width)
+									 % waterImage.width, 
+							 y: ((position.y - Math.sin(boatAngle)*boatSpeed) + waterImage.height)
+							 		 % waterImage.height} ;
+			}
+		}
+
+
+
+		function getMousePos(canvas, evt) {
+			var rect = canvas.getBoundingClientRect();
+			return {
+				x: evt.clientX - rect.left,
+				y: evt.clientY - rect.top
+			} 
+		};
+		
+		function doMouse(event)
+		{
+			var pos = getMousePos(can, event);
+
+			var polar = car2pol( { x: pos.x - (can.width/2), 
+								   y: pos.y - (can.height/2) });
+
+			boatAngle = polar.azi;
+			boatSpeed = polar.dist / 10;
+
+		
+		}
+
+
+		function doClick(event)
+		{
+			var pos = getMousePos(can, event);
+		}
+
+		function doRelease(event) {}
+
+		function doIdle(event) {
+
+			updatePos();	
+
+			clearCanvas();
+
+			drawBG();
+			drawBoat( boatAngle );
+		}
+
+		function clearCanvas(event) {
+		
+			ctx.clearRect(-can.width/2, -can.height/2, can.width, can.height);
+
+			//make border
+			//ctx.strokeStyle = "#000000";
+			//ctx.strokeRect(-can.width/2, -can.height/2, can.width, can.height);	
+		}
+
+
+
+		var can = document.getElementById("myCanvas");
+		var ctx = can.getContext("2d");
+
+		
+		var waterImage = new Image();
+		waterImage.src = 'lib/water-texture-3.jpg';
+		var bgPatt = null;
+
+		ctx.translate(can.width/2, can.height/2);
+
+
+		waterImage.onload = function(){
+			bgPatt = ctx.createPattern(waterImage,'repeat');
+			drawBG();
+			drawBoat();
+		}
+
+		alert(-25 % 50);
+
+		can.addEventListener("mousemove", doMouse, false);
+		can.addEventListener("mousedown", clearCanvas, false);
+		can.addEventListener("mouseup", doRelease, false);
+
+		setInterval(doIdle, 50);
+
+	</script>
+
+
+
+</body>
+
+</html>
