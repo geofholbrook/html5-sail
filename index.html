@@ -3,7 +3,10 @@
 
 	<head>
 		<title>HTML5 CANVAS TEMPLATE</title> 
+
 		<script type="text/javascript" src="lib/math.js" ></script>	
+		<script type="text/javascript" src="boat.js" ></script>	
+
 	</head>
 
 	<body> 
@@ -16,41 +19,10 @@
 
 	<script>
 
-		var bs = 35;  //boatsize
-		var boatColor = "#cd4236";
- 		var boatAngle = 0;
- 		var boatSpeed = 0;
-
  		var zoom = 1;
+ 		var boat = new Boat();
 
- 		var position = { x: 0, y: 0 };
-
-		// xy coords of boat facing East.
-		var boatCoords = [ 	pol2car(bs, 0),
-							pol2car(bs/2, deg2rad(70)),
-							pol2car(bs, deg2rad(160)),
-							pol2car(bs, deg2rad(-160)),
-							pol2car(bs/2, deg2rad(-70)) ] ;
-
-		function drawBoat() {
-
-			ctx.save();
-			ctx.rotate(deg2rad(boatAngle));
-
-			ctx.fillStyle = boatColor;
-			
-			ctx.beginPath();
-			ctx.moveTo (boatCoords[0].x, boatCoords[0].y);
-			ctx.lineTo (boatCoords[1].x, boatCoords[1].y);
-			ctx.lineTo (boatCoords[2].x, boatCoords[2].y);
-			ctx.lineTo (boatCoords[3].x, boatCoords[3].y);
-			ctx.lineTo (boatCoords[4].x, boatCoords[4].y);
-			ctx.closePath();
-			ctx.fill();
-
-			ctx.restore();
-		
-		}
+ 		//alert(boat.pos);
 
 		function drawBG() {
 
@@ -58,8 +30,8 @@
 
 			var w = waterImage.width; var h = waterImage.height;
 			
-			var offset = { x: modulo( -position.x, w ),
-						   y: modulo(  position.y, h )  };	
+			var offset = { x: modulo( -boat.pos.x, w ),
+						   y: modulo(  boat.pos.y, h )  };	
 
 			ctx.translate( offset.x, offset.y );  // changes reference for water pattern
 
@@ -73,21 +45,12 @@
 		}
 
 		function displayInfo() {
-			str = "angle: " + boatAngle + " | speed: " + boatSpeed + 
-				   " | pos: (" + Math.round(position.x) + ", " + Math.round(position.y) + ")";
+			str = "angle: " + boat.angle + " | speed: " + boat.speed + 
+				   " | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";
 
 			document.getElementById("keypress").innerHTML = str;
 		
 		}
-
-		function updatePos() {
-
-			if (waterImage.width > 0) {
-				position = { x: (position.x + Math.cos(deg2rad(boatAngle))*boatSpeed), 
-							 y: (position.y - Math.sin(deg2rad(boatAngle))*boatSpeed)} ;
-			}
-		}
-
 
 
 		function getMousePos(canvas, evt) {
@@ -97,7 +60,7 @@
 				y: evt.clientY - rect.top
 			} 
 		};
-		
+
 		function doMouse(event)
 		{
 			var pos = getMousePos(can, event);
@@ -105,7 +68,7 @@
 			var polar = car2pol( { x: pos.x - (can.width/2), 
 								   y: pos.y - (can.height/2) });
 
-			boatAngle = Math.round( rad2deg( polar.azi ) );
+			boat.angle = Math.round( rad2deg( polar.azi ) );
 			// boatSpeed = polar.dist / 10;
 		}
 
@@ -119,10 +82,10 @@
 		function doKeyDown(event) {
 		  
 		 // switch(event.keyCode) {
-		 // 	 case 37: boatAngle = (boatAngle - 15) % 360; break;
-		 // 	 case 39: boatAngle = (boatAngle + 15) % 360; break;	
-		 // 	 case 38: boatSpeed = boatSpeed + 5; break;
-		 // 	 case 40: if (boatSpeed > 0) { boatSpeed = boatSpeed - 5; } break;	
+		 // 	 case 37: boat.angle = (boat.angle - 15) % 360; break;
+		 // 	 case 39: boat.angle = (boat.angle + 15) % 360; break;	
+		 // 	 case 38: boat.speed += 5; break;
+		 // 	 case 40: if (boat.speed > 0) { boatSpeed += -5; } break;	
 		 // }
 
 		}
@@ -131,18 +94,24 @@
 
 			accel = event.wheelDelta / 50;
 
-			boatSpeed = Math.round( Math.max(0, boatSpeed + accel) );
+			boat.speed = Math.round( Math.max(0, boat.speed + accel) );
 		}
 
-		function doIdle(event) {
 
-			updatePos();	
+		function redraw() {
 
 			clearCanvas();
 
 			drawBG();
-			drawBoat( boatAngle );
-			displayInfo();
+			boat.draw(ctx);
+			displayInfo(); }
+
+
+		function doIdle(event) {
+
+			boat.updatePos();
+			redraw();	
+			
 		}
 
 		function clearCanvas(event) {
@@ -153,8 +122,6 @@
 			//ctx.strokeStyle = "#000000";
 			//ctx.strokeRect(-can.width/2, -can.height/2, can.width, can.height);	
 		}
-
-
 
 		var can = document.getElementById("myCanvas");
 		var ctx = can.getContext("2d");
@@ -167,11 +134,11 @@
 		ctx.translate(can.width/2, can.height/2);
 
 
-		waterImage.onload = function(){
+		waterImage.onload = function() {
 			bgPatt = ctx.createPattern(waterImage,'repeat');
-			drawBG();
-			drawBoat();
 			can.focus();
+
+			redraw();
 		}
 
 		can.addEventListener("mousemove", doMouse, false);
@@ -184,8 +151,6 @@
 		setInterval(doIdle, 50);
 
 	</script>
-
-
 
 </body>
 
