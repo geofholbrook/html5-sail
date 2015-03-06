@@ -54,26 +54,35 @@
 
 			ctx.save();
 
-			ctx.translate( position.x, position.y)  // changes reference for water pattern
+			var w = waterImage.width; var h = waterImage.height;
+			
+			var offset = { x: modulo( -position.x, w ),
+						   y: modulo(  position.y, h )  };	
+
+			ctx.translate( offset.x, offset.y );  // changes reference for water pattern
 
 			ctx.fillStyle = bgPatt;
 
 			// coords adjusted to correspond to canvas
-		    ctx.fillRect(-can.width/2 - position.x, -can.height/2 - position.y, 
-		    			  can.width   + position.x,  can.height   + position.y);  
+		    ctx.fillRect(-can.width/2 - offset.x, -can.height/2 - offset.y, 
+		    			  can.width   + offset.x,  can.height   + offset.y);  
 
 		    ctx.restore();
 		}
 
+		function displayInfo() {
+			str = "angle: " + boatAngle + " | speed: " + boatSpeed + 
+				   " | pos: (" + Math.round(position.x) + ", " + Math.round(position.y) + ")";
 
+			document.getElementById("keypress").innerHTML = str;
+		
+		}
 
 		function updatePos() {
 
 			if (waterImage.width > 0) {
-				position = { x: ((position.x - Math.cos(deg2rad(boatAngle))*boatSpeed) + waterImage.width)
-									 % waterImage.width, 
-							 y: ((position.y - Math.sin(deg2rad(boatAngle))*boatSpeed) + waterImage.height)
-							 		 % waterImage.height} ;
+				position = { x: (position.x + Math.cos(deg2rad(boatAngle))*boatSpeed), 
+							 y: (position.y - Math.sin(deg2rad(boatAngle))*boatSpeed)} ;
 			}
 		}
 
@@ -108,11 +117,10 @@
 		function doRelease(event) {}
 
 		function doKeyPress(event) {
-		  document.getElementById("keypress").innerHTML = event.keyCode;
-		
+		  
 		  switch(event.keyCode) {
-		  	 case 37: boatAngle = boatAngle - 15; break;
-		  	 case 39: boatAngle = boatAngle + 15; break;	
+		  	 case 37: boatAngle = (boatAngle - 15) % 360; break;
+		  	 case 39: boatAngle = (boatAngle + 15) % 360; break;	
 		  	 case 38: boatSpeed = boatSpeed + 5; break;
 		  	 case 40: if (boatSpeed > 0) { boatSpeed = boatSpeed - 5; } break;	
 		  }
@@ -127,6 +135,7 @@
 
 			drawBG();
 			drawBoat( boatAngle );
+			displayInfo();
 		}
 
 		function clearCanvas(event) {
