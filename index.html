@@ -1,3 +1,4 @@
+
 <html> 
 
 	<head>
@@ -7,30 +8,32 @@
 
 	<body> 
 
-	<canvas id="myCanvas" width="800" height="500" >
+	<canvas id="myCanvas" width="800" height="500" tabindex='1'>
 		fallback
-	</canvas> 
+	</canvas> <br>
+
+	<p id="keypress"> no key pressed so far </p>
 
 	<script>
 
 		var bs = 35;  //boatsize
 		var boatColor = "#cd4236";
  		var boatAngle = 0;
- 		var boatSpeed = 0;
+ 		var boatSpeed = 10;
 
  		var position = { x: 0, y: 0 };
 
 		// xy coords of boat facing East.
 		var boatCoords = [ 	pol2car(bs, 0),
-							pol2car(bs/2, rad2deg(70)),
-							pol2car(bs, rad2deg(160)),
-							pol2car(bs, rad2deg(-160)),
-							pol2car(bs/2, rad2deg(-70)) ] ;
+							pol2car(bs/2, deg2rad(70)),
+							pol2car(bs, deg2rad(160)),
+							pol2car(bs, deg2rad(-160)),
+							pol2car(bs/2, deg2rad(-70)) ] ;
 
 		function drawBoat() {
 
 			ctx.save();
-			ctx.rotate(boatAngle);
+			ctx.rotate(deg2rad(boatAngle));
 
 			ctx.fillStyle = boatColor;
 			
@@ -67,9 +70,9 @@
 		function updatePos() {
 
 			if (waterImage.width > 0) {
-				position = { x: ((position.x - Math.cos(boatAngle)*boatSpeed) + waterImage.width)
+				position = { x: ((position.x - Math.cos(deg2rad(boatAngle))*boatSpeed) + waterImage.width)
 									 % waterImage.width, 
-							 y: ((position.y - Math.sin(boatAngle)*boatSpeed) + waterImage.height)
+							 y: ((position.y - Math.sin(deg2rad(boatAngle))*boatSpeed) + waterImage.height)
 							 		 % waterImage.height} ;
 			}
 		}
@@ -88,15 +91,14 @@
 		{
 			var pos = getMousePos(can, event);
 
-			var polar = car2pol( { x: pos.x - (can.width/2), 
-								   y: pos.y - (can.height/2) });
+			//var polar = car2pol( { x: pos.x - (can.width/2), 
+		//						   y: pos.y - (can.height/2) });
 
-			boatAngle = polar.azi;
-			boatSpeed = polar.dist / 10;
+		//	boatAngle = polar.azi;
+	//		boatSpeed = polar.dist / 10;
 
 		
 		}
-
 
 		function doClick(event)
 		{
@@ -104,6 +106,18 @@
 		}
 
 		function doRelease(event) {}
+
+		function doKeyPress(event) {
+		  document.getElementById("keypress").innerHTML = event.keyCode;
+		
+		  switch(event.keyCode) {
+		  	 case 37: boatAngle = boatAngle - 15; break;
+		  	 case 39: boatAngle = boatAngle + 15; break;	
+		  	 case 38: boatSpeed = boatSpeed + 5; break;
+		  	 case 40: boatSpeed = boatSpeed - 5; break;	
+		  }
+
+		}
 
 		function doIdle(event) {
 
@@ -141,11 +155,13 @@
 			bgPatt = ctx.createPattern(waterImage,'repeat');
 			drawBG();
 			drawBoat();
+			can.focus();
 		}
 
-		can.addEventListener("mousemove", doMouse, false);
-		can.addEventListener("mousedown", clearCanvas, false);
-		can.addEventListener("mouseup", doRelease, false);
+		can.addEventListener("mousemove", doMouse, true);
+		can.addEventListener("mousedown", clearCanvas, true);
+		can.addEventListener("mouseup", doRelease, true);
+		can.addEventListener("keydown", doKeyPress, true);
 
 		setInterval(doIdle, 50);
 
