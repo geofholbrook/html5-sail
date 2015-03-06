@@ -114,7 +114,7 @@
 		  	 case 37: boatAngle = boatAngle - 15; break;
 		  	 case 39: boatAngle = boatAngle + 15; break;	
 		  	 case 38: boatSpeed = boatSpeed + 5; break;
-		  	 case 40: boatSpeed = boatSpeed - 5; break;	
+		  	 case 40: if (boatSpeed > 0) { boatSpeed = boatSpeed - 5; } break;	
 		  }
 
 		}
