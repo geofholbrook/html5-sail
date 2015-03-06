@@ -19,7 +19,9 @@
 		var bs = 35;  //boatsize
 		var boatColor = "#cd4236";
  		var boatAngle = 0;
- 		var boatSpeed = 10;
+ 		var boatSpeed = 0;
+
+ 		var zoom = 1;
 
  		var position = { x: 0, y: 0 };
 
@@ -100,13 +102,11 @@
 		{
 			var pos = getMousePos(can, event);
 
-			//var polar = car2pol( { x: pos.x - (can.width/2), 
-		//						   y: pos.y - (can.height/2) });
+			var polar = car2pol( { x: pos.x - (can.width/2), 
+								   y: pos.y - (can.height/2) });
 
-		//	boatAngle = polar.azi;
-	//		boatSpeed = polar.dist / 10;
-
-		
+			boatAngle = Math.round( rad2deg( polar.azi ) );
+			// boatSpeed = polar.dist / 10;
 		}
 
 		function doClick(event)
@@ -116,15 +116,22 @@
 
 		function doRelease(event) {}
 
-		function doKeyPress(event) {
+		function doKeyDown(event) {
 		  
-		  switch(event.keyCode) {
-		  	 case 37: boatAngle = (boatAngle - 15) % 360; break;
-		  	 case 39: boatAngle = (boatAngle + 15) % 360; break;	
-		  	 case 38: boatSpeed = boatSpeed + 5; break;
-		  	 case 40: if (boatSpeed > 0) { boatSpeed = boatSpeed - 5; } break;	
-		  }
+		 // switch(event.keyCode) {
+		 // 	 case 37: boatAngle = (boatAngle - 15) % 360; break;
+		 // 	 case 39: boatAngle = (boatAngle + 15) % 360; break;	
+		 // 	 case 38: boatSpeed = boatSpeed + 5; break;
+		 // 	 case 40: if (boatSpeed > 0) { boatSpeed = boatSpeed - 5; } break;	
+		 // }
 
+		}
+
+		function doMouseWheel(event) {
+
+			accel = event.wheelDelta / 50;
+
+			boatSpeed = Math.round( Math.max(0, boatSpeed + accel) );
 		}
 
 		function doIdle(event) {
@@ -167,10 +174,12 @@
 			can.focus();
 		}
 
-		can.addEventListener("mousemove", doMouse, true);
-		can.addEventListener("mousedown", clearCanvas, true);
-		can.addEventListener("mouseup", doRelease, true);
-		can.addEventListener("keydown", doKeyPress, true);
+		can.addEventListener("mousemove", doMouse, false);
+		can.addEventListener("mousedown", clearCanvas, false);
+		can.addEventListener("mouseup", doRelease, false);
+		can.addEventListener("keydown", doKeyDown, false);
+
+		can.addEventListener("mousewheel", doMouseWheel, false);
 
 		setInterval(doIdle, 50);
 
