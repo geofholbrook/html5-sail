@@ -2,8 +2,7 @@
 <html> 
 
 	<head>
-		<title>HTML5 CANVAS TEMPLATE</title> 
-
+		<title>sail boat simulator in progress</title> 
 		<script type="text/javascript" src="lib/math.js" ></script>	
 		<script type="text/javascript" src="boat.js" ></script>	
 
@@ -69,7 +68,7 @@
 								   y: pos.y - (can.height/2) });
 
 			boat.angle = Math.round( rad2deg( polar.azi ) );
-			// boatSpeed = polar.dist / 10;
+			// boat.speed = polar.dist / 10;
 		}
 
 		function doClick(event)
@@ -81,12 +80,29 @@
 
 		function doKeyDown(event) {
 		  
-		 // switch(event.keyCode) {
-		 // 	 case 37: boat.angle = (boat.angle - 15) % 360; break;
-		 // 	 case 39: boat.angle = (boat.angle + 15) % 360; break;	
-		 // 	 case 38: boat.speed += 5; break;
-		 // 	 case 40: if (boat.speed > 0) { boatSpeed += -5; } break;	
-		 // }
+		  switch(event.keyCode) {
+		  	 case 37: // left arrow
+		  	 //boat.angle = (boat.angle - 15) % 360; 
+		  	 boat.tilt += -10;
+
+		  	 break;
+
+		  	 case 39: // right arrow
+		  	 //boat.angle = (boat.angle + 15) % 360; 
+		  	 boat.tilt += 10;
+
+		  	 break;	
+		  	 
+		  	 case 38: // up arrow
+		  	 //boat.speed += 5; 
+		  	 boat.boom += 10;
+		  	 break;
+		  	 
+		  	 case 40: // down arrow
+		  	 //if (boat.speed > 0) { boat.speed += -5; } 
+		  	 boat.boom += -10
+		  	 break;	
+		  }
 
 		}
 
