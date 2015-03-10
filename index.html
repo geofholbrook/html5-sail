@@ -4,7 +4,8 @@
 	<head>
 		<title>sail boat simulator in progress</title> 
 		<script type="text/javascript" src="lib/math.js" ></script>	
-		<script type="text/javascript" src="boat.js" ></script>	
+		<script type="text/javascript" src="boat.js" ></script>
+		<script type="text/javascript" src="wind.js" ></script>		
 
 	</head>
 
@@ -119,6 +120,7 @@
 			clearCanvas();
 
 			drawBG();
+			drawWind(ctx);
 			boat.draw(ctx);
 			displayInfo(); }
 
@@ -153,7 +155,11 @@
 		waterImage.onload = function() {
 			bgPatt = ctx.createPattern(waterImage,'repeat');
 			can.focus();
+			redraw();
+		}
 
+		windImage.onload = function() {
+			windPatt = ctx.createPattern(windImage,'repeat');
 			redraw();
 		}
 
