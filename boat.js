@@ -30,8 +30,8 @@ function Boat()
 }
 
 Boat.prototype.updatePos = function() {
-	this.pos.x += Math.cos(deg2rad(this.angle))*this.speed;
-	this.pos.y -= Math.sin(deg2rad(this.angle))*this.speed;
+	this.pos.x += Math.cos(this.angle)*this.speed;
+	this.pos.y += Math.sin(this.angle)*this.speed;
 }
 
 
@@ -39,12 +39,12 @@ Boat.prototype.drawSail = function (ctx) {
 
 	// calculate positions
 	
-	var mastTop = { x: mastBase.x, y: mastBase.y - mastHeight * Math.sin(deg2rad(this.tilt)) };
-	var mastHead = { x: mastBase.x, y: mastBase.y - sailHeight * Math.sin(deg2rad(this.tilt)) };
-    var tack = { x: mastBase.x, y: mastBase.y - boomHeight * Math.sin(deg2rad(this.tilt)) };
-	var clew = { x: mastBase.x - boomLength * Math.cos(deg2rad(this.boom)), 
-		         y: mastBase.y - boomLength * Math.sin(deg2rad(this.boom)) * Math.cos(deg2rad(this.tilt))
-		        	           - boomHeight * Math.sin(deg2rad(this.tilt)) }
+	var mastTop = { x: mastBase.x, y: mastBase.y - mastHeight * Math.sin(this.tilt) };
+	var mastHead = { x: mastBase.x, y: mastBase.y - sailHeight * Math.sin(this.tilt) };
+    var tack = { x: mastBase.x, y: mastBase.y - boomHeight * Math.sin(this.tilt) };
+	var clew = { x: mastBase.x - boomLength * Math.cos(-this.boom), 
+		         y: mastBase.y - boomLength * Math.sin(-this.boom) * Math.cos(this.tilt)
+		        	           - boomHeight * Math.sin(this.tilt) }
 
 
 	// boom
@@ -84,7 +84,7 @@ Boat.prototype.drawSail = function (ctx) {
 
 Boat.prototype.drawHull = function (ctx) {
 
-	var tiltScale = Math.cos (deg2rad(this.tilt));
+	var tiltScale = Math.cos (this.tilt);
 
 	ctx.fillStyle = boat.color;
 	ctx.strokeStyle = boat.color;
@@ -106,7 +106,7 @@ Boat.prototype.drawHull = function (ctx) {
 Boat.prototype.draw = function (ctx) {
 
 	ctx.save();
-	ctx.rotate(deg2rad(this.angle));
+	ctx.rotate(-this.angle);
 
 	this.drawHull(ctx);
 	this.drawSail(ctx);

@@ -3,7 +3,7 @@ var windImage = new Image();
 windImage.src = "lib/wind-arrow.png";
 var windPatt = null;
 
-var windAngle = 0.2;
+var windAngle = 0.4;
 
 var windCounter = 0;
 var windSpeed = 3;
@@ -16,7 +16,7 @@ function drawWind(ctx)
 
 	windCounter = (windCounter + windSpeed) % 75;
 
-	ctx.rotate(windAngle);
+	ctx.rotate(-windAngle);
 
 	var offset = { x: modulo( -boat.pos.x, windImage.width ),
 				   y: modulo(  boat.pos.y, windImage.height )  };		
@@ -29,3 +29,9 @@ function drawWind(ctx)
     ctx.globalAlpha = 1;
     ctx.restore();
 }
+
+function angleToSail(boat)
+{
+
+}
+
