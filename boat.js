@@ -30,6 +30,9 @@ function Boat()
 }
 
 Boat.prototype.updatePos = function() {
+
+	this.speed = Math.sin (boat.boom) * Math.sin (boat.angle + boat.boom) * 5;
+
 	this.pos.x += Math.cos(this.angle)*this.speed;
 	this.pos.y += Math.sin(this.angle)*this.speed;
 }

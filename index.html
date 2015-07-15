@@ -47,7 +47,8 @@
 		function displayInfo() {
 			str = "boat angle: " + Math.round( rad2deg( boat.angle )) + 
 				   " | tilt: " + Math.round(rad2deg( boat.tilt )) + 
-				   " | boom: " + Math.round(rad2deg( boat.boom )) + 
+				   " | boom-to-wind: " + Math.round(rad2deg( boat.angle + boat.boom )) + 
+				   " | forward thrust " + Math.sin (boat.boom) * Math.sin (boat.angle + boat.boom) +
 				   " | speed: " + boat.speed + 
 				   " | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";
 
@@ -99,12 +100,12 @@
 		  	 
 		  	 case 38: // up arrow
 		  	 //boat.speed += 5; 
-		  	 boat.speed += 1;
+		  	 boat.boom += 0.1;
 		  	 break;
 		  	 
 		  	 case 40: // down arrow
 		  	 //if (boat.speed > 0) { boat.speed += -5; } 
-		  	 boat.speed += -1
+		  	 boat.boom += -0.1
 		  	 break;	
 		  }
 
