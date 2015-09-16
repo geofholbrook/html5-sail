@@ -15,7 +15,7 @@
 		fallback
 	</canvas> <br>
 
-	<p id="keypress"> no key pressed so far </p>
+	<p id="keypress"> left/right = rotate the boat;  up/down = let out / pull in the sheet </p>
 
 	<script>
 
@@ -85,13 +85,13 @@
 		  
 		  switch(event.keyCode) {
 		  	 case 37: // left arrow
-		  	 boat.angle = clip(boat.angle + 0.15, 0, Math.PI*2);
+		  	 boat.angle = modulo(boat.angle + 0.15 + Math.PI, Math.PI*2) - Math.PI;
 		  	 //boat.tilt += -0.1;
 
 		  	 break;
 
 		  	 case 39: // right arrow
-		  	 boat.angle = clip(boat.angle - 0.15, 0, Math.PI*2);
+		  	 boat.angle = modulo(boat.angle - 0.15 + Math.PI, Math.PI*2) - Math.PI;
 		  	 //boat.tilt += 0.1;
 
 		  	 break;	
@@ -125,7 +125,8 @@
 
 			boat.draw(ctx);
 
-			displayInfo(); }
+			//displayInfo(); 
+		}
 
 
 		function doIdle(event) {
