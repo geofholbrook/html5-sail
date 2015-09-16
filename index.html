@@ -11,11 +11,41 @@
 
 	<body> 
 
+	<style>
+	#myCanvas {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin:auto;
+	}	
+
+	.header {
+    position:fixed;
+    top:0;
+    left:50%;
+    margin-left:-200px; /*negative half the width */
+    width:600px;
+    height:25px;
+    }
+
+	.footer {
+    position:fixed;
+    bottom:0;
+    left:50%;
+    margin-left:-200px; /*negative half the width */
+    width:600px;
+    height:25px;
+    }
+	</style>
+
 	<canvas id="myCanvas" width="800" height="500" tabindex='1'>
 		fallback
 	</canvas> <br>
 
-	<p id="keypress"> left/right = rotate the boat;  up/down = let out / pull in the sheet </p>
+	<div class="header" id="header"> sailing simulator (work in progress) (c) Geof Holbrook</div>
+	<div class="footer" id="footer"> left/right = rotate the boat;  up/down = let out / pull in the sheet </div>
 
 	<script>
 
@@ -50,7 +80,7 @@
 				   " | speed: " + boat.speed + 
 				   " | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";
 
-			document.getElementById("keypress").innerHTML = str;
+			document.getElementById("footer").innerHTML = str;
 		
 		}
 
