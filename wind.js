@@ -11,7 +11,7 @@ var windSpeed = 3;
 function drawWind(ctx)
 {
 	ctx.save();
-	ctx.globalAlpha = 0.08;
+	ctx.globalAlpha = 0.15;
 	ctx.fillStyle = windPatt;
 
 	//wind doesn't move, can't figure it out how to make that work
