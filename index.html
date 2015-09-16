@@ -11,18 +11,46 @@
 
 	<body> 
 
+	<style>
+	#myCanvas {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin:auto;
+	}	
+
+	.header {
+    position:fixed;
+    top:0;
+    left:50%;
+    margin-left:-200px; /*negative half the width */
+    width:600px;
+    height:25px;
+    }
+
+	.footer {
+    position:fixed;
+    bottom:0;
+    left:50%;
+    margin-left:-200px; /*negative half the width */
+    width:600px;
+    height:25px;
+    }
+	</style>
+
 	<canvas id="myCanvas" width="800" height="500" tabindex='1'>
 		fallback
 	</canvas> <br>
 
-	<p id="keypress"> no key pressed so far </p>
+	<div class="header" id="header"> sailing simulator (work in progress) (c) Geof Holbrook</div>
+	<div class="footer" id="footer"> left/right = rotate the boat;  up/down = let out / pull in the sheet </div>
 
 	<script>
 
  		var zoom = 1;
  		var boat = new Boat();
-
- 		//alert(boat.pos);
 
 		function drawBG() {
 
@@ -45,10 +73,14 @@
 		}
 
 		function displayInfo() {
-			str = "angle: " + boat.angle + " | speed: " + boat.speed + 
+			str = "boat angle: " + Math.round( rad2deg( boat.angle )) + 
+				   " | tilt: " + Math.round(rad2deg( boat.tilt )) + 
+				   " | boom-to-wind: " + Math.round(rad2deg( radDiff( boat.angle + boat.boom, windAngle ))) + 
+				   " | forward thrust " + Math.sin (boat.boom) * Math.sin (boat.angle + boat.boom) +
+				   " | speed: " + boat.speed + 
 				   " | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";
 
-			document.getElementById("keypress").innerHTML = str;
+			document.getElementById("footer").innerHTML = str;
 		
 		}
 
@@ -66,9 +98,9 @@
 			var pos = getMousePos(can, event);
 
 			var polar = car2pol( { x: pos.x - (can.width/2), 
-								   y: pos.y - (can.height/2) });
+								   y: -( pos.y - (can.height/2) ) });
 
-			boat.angle = Math.round( rad2deg( polar.azi ) );
+			// boat.angle = polar.azi;
 			// boat.speed = polar.dist / 10;
 		}
 
@@ -83,25 +115,24 @@
 		  
 		  switch(event.keyCode) {
 		  	 case 37: // left arrow
-		  	 //boat.angle = (boat.angle - 15) % 360; 
-		  	 boat.tilt += -10;
+		  	 boat.angle = modulo(boat.angle + 0.15 + Math.PI, Math.PI*2) - Math.PI;
+		  	 //boat.tilt += -0.1;
 
 		  	 break;
 
 		  	 case 39: // right arrow
-		  	 //boat.angle = (boat.angle + 15) % 360; 
-		  	 boat.tilt += 10;
+		  	 boat.angle = modulo(boat.angle - 0.15 + Math.PI, Math.PI*2) - Math.PI;
+		  	 //boat.tilt += 0.1;
 
 		  	 break;	
 		  	 
 		  	 case 38: // up arrow
 		  	 //boat.speed += 5; 
-		  	 boat.boom += 10;
+		  	 boat.sheet = clip(boat.sheet+0.1, 0, 1.4);
 		  	 break;
 		  	 
 		  	 case 40: // down arrow
-		  	 //if (boat.speed > 0) { boat.speed += -5; } 
-		  	 boat.boom += -10
+		  	 boat.sheet = clip(boat.sheet-0.1, 0, 1.4);
 		  	 break;	
 		  }
 
@@ -124,7 +155,8 @@
 
 			boat.draw(ctx);
 
-			displayInfo(); }
+			//displayInfo(); 
+		}
 
 
 		function doIdle(event) {
