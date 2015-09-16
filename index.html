@@ -22,8 +22,6 @@
  		var zoom = 1;
  		var boat = new Boat();
 
- 		//alert(boat.pos);
-
 		function drawBG() {
 
 			ctx.save();
@@ -47,7 +45,7 @@
 		function displayInfo() {
 			str = "boat angle: " + Math.round( rad2deg( boat.angle )) + 
 				   " | tilt: " + Math.round(rad2deg( boat.tilt )) + 
-				   " | boom-to-wind: " + Math.round(rad2deg( boat.angle + boat.boom )) + 
+				   " | boom-to-wind: " + Math.round(rad2deg( radDiff( boat.angle + boat.boom, windAngle ))) + 
 				   " | forward thrust " + Math.sin (boat.boom) * Math.sin (boat.angle + boat.boom) +
 				   " | speed: " + boat.speed + 
 				   " | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";
@@ -72,7 +70,7 @@
 			var polar = car2pol( { x: pos.x - (can.width/2), 
 								   y: -( pos.y - (can.height/2) ) });
 
-			boat.angle = polar.azi;
+			// boat.angle = polar.azi;
 			// boat.speed = polar.dist / 10;
 		}
 
@@ -87,25 +85,24 @@
 		  
 		  switch(event.keyCode) {
 		  	 case 37: // left arrow
-		  	 //boat.angle = (boat.angle - 15) % 360; 
-		  	 boat.tilt += -0.1;
+		  	 boat.angle = clip(boat.angle + 0.15, 0, Math.PI*2);
+		  	 //boat.tilt += -0.1;
 
 		  	 break;
 
 		  	 case 39: // right arrow
-		  	 //boat.angle = (boat.angle + 15) % 360; 
-		  	 boat.tilt += 0.1;
+		  	 boat.angle = clip(boat.angle - 0.15, 0, Math.PI*2);
+		  	 //boat.tilt += 0.1;
 
 		  	 break;	
 		  	 
 		  	 case 38: // up arrow
 		  	 //boat.speed += 5; 
-		  	 boat.boom += 0.1;
+		  	 boat.sheet = clip(boat.sheet+0.1, 0, 1.4);
 		  	 break;
 		  	 
 		  	 case 40: // down arrow
-		  	 //if (boat.speed > 0) { boat.speed += -5; } 
-		  	 boat.boom += -0.1
+		  	 boat.sheet = clip(boat.sheet-0.1, 0, 1.4);
 		  	 break;	
 		  }
 

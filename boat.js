@@ -27,11 +27,18 @@ function Boat()
 	this.color = "#cd4236"
 
 	this.boom = 0;
+
+	this.sheet = 0; 
 }
 
 Boat.prototype.updatePos = function() {
 
-	this.speed = Math.sin (boat.boom) * Math.sin (boat.angle + boat.boom) * 5;
+
+	this.boom = clip(-boat.angle, -this.sheet, this.sheet) ;
+
+    this.tilt = Math.cos(boat.boom) * Math.sin(boat.angle + boat.boom) * 0.8;
+
+	this.speed = -(Math.sin(boat.boom) * Math.sin(boat.angle + boat.boom)) * 15;   // wind is always 0
 
 	this.pos.x += Math.cos(this.angle)*this.speed;
 	this.pos.y += Math.sin(this.angle)*this.speed;
@@ -91,7 +98,9 @@ Boat.prototype.drawHull = function (ctx) {
 
 	ctx.fillStyle = boat.color;
 	ctx.strokeStyle = boat.color;
-	ctx.lineWidth = Math.abs( boat.tilt / 20 );
+
+	ctx.lineJoin = "round";
+	ctx.lineWidth = Math.abs( boat.tilt / 20 ) + 5;
 
 	ctx.beginPath();
 
