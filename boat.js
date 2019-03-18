@@ -1,22 +1,20 @@
-
-
 // BOAT CLASS //
 
-var bs = 35; // boat size
+var boatSize = 35; // boat size
 
-var mastHeight = bs*1.8;
+var mastHeight = boatSize*1.8;
 var sailHeight = mastHeight * 0.95;
-var boomLength = bs*1.2;
+var boomLength = boatSize*1.2;
 var boomHeight = mastHeight * 0.1;
 
 // xy coords of boat facing East.
-var boatCoords = [ 	pol2car(bs, 0),
-					pol2car(bs/2, deg2rad(70)),
-					pol2car(bs, deg2rad(160)),
-					pol2car(bs, deg2rad(-160)),
-					pol2car(bs/2, deg2rad(-70)) ] ;
+var boatCoords = [ 	pol2car(boatSize, 0),
+					pol2car(boatSize/2, deg2rad(70)),
+					pol2car(boatSize, deg2rad(160)),
+					pol2car(boatSize, deg2rad(-160)),
+					pol2car(boatSize/2, deg2rad(-70)) ] ;
 
-var mastBase = { x: bs/3, y: 0 };
+var mastBase = { x: boatSize/3, y: 0 };
 
 function Boat()
 {
