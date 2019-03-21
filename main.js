@@ -17,11 +17,14 @@ function init() {
     ctx.translate(can.width/2, can.height/2);
     waterImage.onload = waterImageLoaded; 
     windImage.onload = windImageLoaded;
+    /*
     can.addEventListener("mousemove", doMouse, false);
     can.addEventListener("mousedown", clearCanvas, false);
     can.addEventListener("mouseup", doRelease, false);
     can.addEventListener("keydown", doKeyDown, false);
     can.addEventListener("mousewheel", doMouseWheel, false);
+    */
+    setInterval(leftTurn, 300);
     setInterval(doIdle, 50);
     //make border
     //ctx.strokeStyle = "#000000";
@@ -37,6 +40,11 @@ function waterImageLoaded() {
 function windImageLoaded() {
     windPatt = ctx.createPattern(windImage,'repeat');
     redraw();
+}
+
+function leftTurn() {
+    boat.angle = modulo(boat.angle + 0.05 + Math.PI, Math.PI*2) - Math.PI;
+    boat.sheet = boat.calculateSheet(boat.angle);
 }
 
 function doIdle(event) {
