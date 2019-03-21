@@ -1,22 +1,25 @@
-
-
 // BOAT CLASS //
 
-var bs = 35; // boat size
+var boatSize = 35; // boat size
 
-var mastHeight = bs*1.8;
+var mastHeight = boatSize*1.8;
 var sailHeight = mastHeight * 0.95;
-var boomLength = bs*1.2;
+var boomLength = boatSize*1.2;
 var boomHeight = mastHeight * 0.1;
 
 // xy coords of boat facing East.
-var boatCoords = [ 	pol2car(bs, 0),
-					pol2car(bs/2, deg2rad(70)),
-					pol2car(bs, deg2rad(160)),
-					pol2car(bs, deg2rad(-160)),
-					pol2car(bs/2, deg2rad(-70)) ] ;
+var boatCoords = [ 	pol2car(boatSize, 0),
+					pol2car(boatSize/2, deg2rad(70)),
+					pol2car(boatSize, deg2rad(160)),
+					pol2car(boatSize, deg2rad(-160)),
+					pol2car(boatSize/2, deg2rad(-70)) ] ;
 
-var mastBase = { x: bs/3, y: 0 };
+var mastBase = { x: boatSize/3, y: 0 };
+
+const MAX_RUDDER = Math.PI/4;
+
+// Change in heading at full rudder, speed: 1
+const HEADING_DELTA_MAX_RUDDER = Math.PI / 32;
 
 function Boat()
 {
@@ -25,16 +28,14 @@ function Boat()
 	this.pos = { x:0, y:0 };
 	this.tilt = 0;
 	this.color = "#cd4236"
-
 	this.boom = 0;
-
-	this.sheet = 0; 
+	this.sheet = 0; // The rope controlling the boom 
 }
 
 Boat.prototype.updatePos = function() {
 
-
-	this.boom = clip(-boat.angle, -this.sheet, this.sheet) ;
+	// set the boom angle to the opposite of the boat angle restricted by sheet
+	this.boom = clip(-boat.angle, -this.sheet, this.sheet);
 
     this.tilt = Math.cos(boat.boom) * Math.sin(boat.angle + boat.boom) * 0.8;
 
@@ -46,9 +47,7 @@ Boat.prototype.updatePos = function() {
 
 
 Boat.prototype.drawSail = function (ctx) {
-
 	// calculate positions
-	
 	var mastTop = { x: mastBase.x, y: mastBase.y - mastHeight * Math.sin(this.tilt) };
 	var mastHead = { x: mastBase.x, y: mastBase.y - sailHeight * Math.sin(this.tilt) };
     var tack = { x: mastBase.x, y: mastBase.y - boomHeight * Math.sin(this.tilt) };
@@ -86,10 +85,6 @@ Boat.prototype.drawSail = function (ctx) {
 	ctx.lineTo (mastTop.x, mastTop.y);
 	ctx.closePath();
 	ctx.stroke(); 
-
-
-
-
 }
 
 Boat.prototype.drawHull = function (ctx) {
@@ -116,14 +111,26 @@ Boat.prototype.drawHull = function (ctx) {
 }
 
 Boat.prototype.draw = function (ctx) {
-
 	ctx.save();
 	ctx.rotate(-this.angle);
-
 	this.drawHull(ctx);
 	this.drawSail(ctx);
-
 	ctx.restore();
+}
 
+Boat.prototype.calculateSheet = function(boatAngle) {
+	return relWindToRelBoom(boatAngle);
+}
+
+function relWindToRelBoom(relWind) {
+    return (3- 3 * Math.cos(relWind))/4;
+}
+
+function updateHeading(rudder, speed) {
+	return rudderPercent * speed * HEADING_DELTA_MAX_RUDDER;
+}
+
+function rudderPercent(rudder) {
+	return (MAX_RUDDER / rudder) * 100;
 }
 
