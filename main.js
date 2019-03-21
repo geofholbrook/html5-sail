@@ -79,6 +79,7 @@ function displayInfo() {
             "\n | boom-to-wind: " + Math.round(rad2deg( radDiff( boat.angle + boat.boom, windAngle ))) + 
             "\n | forward thrust " + Math.sin (boat.boom) * Math.sin (boat.angle + boat.boom) +
             "\n | speed: " + boat.speed + 
+            "\n | sheet: " + boat.sheet +
             "\n | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";
     document.getElementById("footer").innerText = str;
 }
@@ -121,13 +122,15 @@ function doKeyDown(event) {
         
         case 38: // up arrow
         //boat.speed += 5; 
-        boat.sheet = clip(boat.sheet+0.1, 0, 1.4);
+        boat.sheet = clip(boat.sheet+0.05, 0, 1.4);
         break;
         
         case 40: // down arrow
-        boat.sheet = clip(boat.sheet-0.1, 0, 1.4);
+        boat.sheet = clip(boat.sheet-0.05, 0, 1.4);
         break;	
     }
+
+    boat.sheet = boat.calculateSheet(boat.angle);
 }
 
 function doMouseWheel(event) {

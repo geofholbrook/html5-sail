@@ -23,16 +23,14 @@ function Boat()
 	this.pos = { x:0, y:0 };
 	this.tilt = 0;
 	this.color = "#cd4236"
-
 	this.boom = 0;
-
-	this.sheet = 0; 
+	this.sheet = 0; // The rope controlling the boom 
 }
 
 Boat.prototype.updatePos = function() {
 
-
-	this.boom = clip(-boat.angle, -this.sheet, this.sheet) ;
+	// set the boom angle to the opposite of the boat angle restricted by sheet
+	this.boom = clip(-boat.angle, -this.sheet, this.sheet);
 
     this.tilt = Math.cos(boat.boom) * Math.sin(boat.angle + boat.boom) * 0.8;
 
@@ -44,9 +42,7 @@ Boat.prototype.updatePos = function() {
 
 
 Boat.prototype.drawSail = function (ctx) {
-
 	// calculate positions
-	
 	var mastTop = { x: mastBase.x, y: mastBase.y - mastHeight * Math.sin(this.tilt) };
 	var mastHead = { x: mastBase.x, y: mastBase.y - sailHeight * Math.sin(this.tilt) };
     var tack = { x: mastBase.x, y: mastBase.y - boomHeight * Math.sin(this.tilt) };
@@ -84,10 +80,6 @@ Boat.prototype.drawSail = function (ctx) {
 	ctx.lineTo (mastTop.x, mastTop.y);
 	ctx.closePath();
 	ctx.stroke(); 
-
-
-
-
 }
 
 Boat.prototype.drawHull = function (ctx) {
@@ -114,14 +106,18 @@ Boat.prototype.drawHull = function (ctx) {
 }
 
 Boat.prototype.draw = function (ctx) {
-
 	ctx.save();
 	ctx.rotate(-this.angle);
-
 	this.drawHull(ctx);
 	this.drawSail(ctx);
-
 	ctx.restore();
+}
 
+Boat.prototype.calculateSheet = function(boatAngle) {
+	return relWindToRelBoom(boatAngle);
+}
+
+function relWindToRelBoom(relWind) {
+    return (3- 3 * Math.cos(relWind))/4;
 }
 
