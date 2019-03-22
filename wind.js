@@ -16,7 +16,6 @@ function drawWind(ctx)
 
 	//wind doesn't move, can't figure it out how to make that work
 	//windCounter = (windCounter + windSpeed) % 75;
-
 	
     var offset = { x: modulo( -boat.pos.x, windImage.width ),
 				   y: modulo(  boat.pos.y, windImage.height )  };		
@@ -25,17 +24,9 @@ function drawWind(ctx)
 	ctx.translate(offset.x, offset.y);
 	
 	//ctx.rotate(-windAngle);
-    
-
 	// made double size so that it fills the screen
     ctx.fillRect(-can.width, -can.height, can.width * 2, can.height * 2);
 
     ctx.globalAlpha = 1;
     ctx.restore();
 }
-
-function angleToSail(boat)
-{
-
-}
-

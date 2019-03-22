@@ -1,7 +1,6 @@
 // BOAT CLASS //
 
 var boatSize = 35; // boat size
-
 var mastHeight = boatSize*1.8;
 var sailHeight = mastHeight * 0.95;
 var boomLength = boatSize*1.2;
@@ -44,20 +43,15 @@ Boat.prototype.updatePos = function() {
 		}
 	}
 	this.angle = newAngle;
-
 	this.sheet = this.calculateSheet(this.angle);
 
 	// set the boom angle to the opposite of the boat angle restricted by sheet
 	this.boom = clip(-this.angle, -this.sheet, this.sheet);
-
     this.tilt = Math.cos(this.boom) * Math.sin(this.angle + this.boom) * 0.8;
-
 	this.speed = -(Math.sin(this.boom) * Math.sin(this.angle + this.boom)) * 15;   // wind is always 0
-
 	this.pos.x += Math.cos(this.angle)*this.speed;
 	this.pos.y += Math.sin(this.angle)*this.speed;
 }
-
 
 Boat.prototype.drawSail = function (ctx) {
 	// calculate positions
@@ -67,7 +61,6 @@ Boat.prototype.drawSail = function (ctx) {
 	var clew = { x: mastBase.x - boomLength * Math.cos(-this.boom), 
 		         y: mastBase.y - boomLength * Math.sin(-this.boom) * Math.cos(this.tilt)
 		        	           - boomHeight * Math.sin(this.tilt) }
-
 
 	// boom
     ctx.strokeStyle = "#590000";
@@ -131,10 +124,16 @@ Boat.prototype.draw = function (ctx) {
 	ctx.restore();
 }
 
+/**
+ * @returns Optimized sheet value
+ */
 Boat.prototype.calculateSheet = function(boatAngle) {
 	return relWindToRelBoom(boatAngle);
 }
 
+/**
+ * Update rudder position
+ */
 Boat.prototype.moveRudder = function(rudderDelta) {
 	let newRudder = this.rudder + rudderDelta;	
 	if (newRudder < -MAX_RUDDER) {
@@ -145,14 +144,19 @@ Boat.prototype.moveRudder = function(rudderDelta) {
 	this.rudder = clip(this.rudder + rudderDelta, -MAX_RUDDER, MAX_RUDDER);
 }
 
-function relWindToRelBoom(relWind) {
-    return (3- 3 * Math.cos(relWind))/4;
-}
-
+/**
+ * Change in heading (radians) given rudder and speed 
+ * @param {Number} rudder 
+ * @param {Number} speed 
+ */
 function headingDelta(rudder, speed) {
 	return (rudderPercent(rudder)/100) * speed * HEADING_DELTA_MAX_RUDDER;
 }
 
+/**
+ * Return percent of max/min rudder, given a rudder input 
+ * @param {Number} rudder 
+ */
 function rudderPercent(rudder) {
 	if (Math.abs(rudder) < 0.001) {
 		rudder = 0.001;
@@ -160,6 +164,10 @@ function rudderPercent(rudder) {
 	return (rudder / MAX_RUDDER) * 100;
 }
 
+/**
+ * Optimal relative boom angle given relative wind angle 
+ * @param {Number} relWind 
+ */
 function relWindToRelBoom(relWind) {
     return (3- 3 * Math.cos(relWind))/4;
 }

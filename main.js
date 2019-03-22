@@ -1,28 +1,34 @@
 window.onload = init;
 
 var can;
+var windCan;
 var ctx;
+var windCtx;
 var waterImage;
 var zoom = 1;
 var boat;
 var bgPatt = null;
-
+const MAIN_CANVAS_WIDTH = 800;
+const MAIN_CANVAS_HEIGHT = 500;
 function init() {
     waterImage = new Image();
     waterImage.src = 'lib/water-texture-3.jpg';
-    can = document.getElementById("myCanvas");
+    can = document.getElementById("waterCanvas");
+    windCan = document.getElementById("windCanvas");
+    can.width = windCan.width = MAIN_CANVAS_WIDTH;
+    can.height = windCan.height = MAIN_CANVAS_HEIGHT;
     ctx = can.getContext("2d");
+    windCtx = windCan.getContext("2d");
     boat = new Boat();
     ctx.clearRect(-can.width/2, -can.height/2, can.width, can.height);
     ctx.translate(can.width/2, can.height/2);
     waterImage.onload = waterImageLoaded; 
-    windImage.onload = windImageLoaded;
+    windImageLoaded();
     can.addEventListener("mousemove", doMouse, false);
     can.addEventListener("mousedown", clearCanvas, false);
     can.addEventListener("mouseup", doRelease, false);
     can.addEventListener("keydown", doKeyDown, false);
     can.addEventListener("mousewheel", doMouseWheel, false);
-    // setInterval(leftTurn, 300);
     setInterval(doIdle, 50);
     //make border
     //ctx.strokeStyle = "#000000";
@@ -36,7 +42,7 @@ function waterImageLoaded() {
 }
 
 function windImageLoaded() {
-    windPatt = ctx.createPattern(windImage,'repeat');
+    windPatt = windCtx.createPattern(windImage,'repeat');
     redraw();
 }
 
@@ -52,6 +58,7 @@ function doIdle(event) {
 
 function clearCanvas(event) {
     ctx.clearRect(-can.width/2, -can.height/2, can.width, can.height);
+    windCtx.clearRect(-windCan.width/2, -windCan.height/2, windCan.width, windCan.height);
     //make border
     //ctx.strokeStyle = "#000000";
     //ctx.strokeRect(-can.width/2, -can.height/2, can.width, can.height);	
@@ -60,7 +67,7 @@ function clearCanvas(event) {
 function redraw() {
     clearCanvas();
     drawBG();
-    drawWind(ctx);
+    drawWind(windCtx);
     boat.draw(ctx);
     displayInfo(); 
 }
