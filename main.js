@@ -15,13 +15,17 @@ function init() {
     waterImage.src = 'lib/water-texture-3.jpg';
     can = document.getElementById("waterCanvas");
     windCan = document.getElementById("windCanvas");
-    can.width = windCan.width = MAIN_CANVAS_WIDTH;
-    can.height = windCan.height = MAIN_CANVAS_HEIGHT;
+    can.width = MAIN_CANVAS_WIDTH;
+    windCan.width = MAIN_CANVAS_WIDTH;
+    windCan.height = MAIN_CANVAS_HEIGHT;
+    can.height = MAIN_CANVAS_HEIGHT;
     ctx = can.getContext("2d");
     windCtx = windCan.getContext("2d");
     boat = new Boat();
     ctx.clearRect(-can.width/2, -can.height/2, can.width, can.height);
+    windCtx.clearRect(-can.width/2, -can.height/2, can.width, can.height);
     ctx.translate(can.width/2, can.height/2);
+    windCtx.translate(can.width/2, can.height/2);
     waterImage.onload = waterImageLoaded; 
     windImageLoaded();
     can.addEventListener("mousemove", doMouse, false);
@@ -30,9 +34,6 @@ function init() {
     can.addEventListener("keydown", doKeyDown, false);
     can.addEventListener("mousewheel", doMouseWheel, false);
     setInterval(doIdle, 50);
-    //make border
-    //ctx.strokeStyle = "#000000";
-    //ctx.strokeRect(-can.width/2, -can.height/2, can.width, can.height);	
 }
     
 function waterImageLoaded() {
@@ -44,6 +45,7 @@ function waterImageLoaded() {
 function windImageLoaded() {
     windPatt = windCtx.createPattern(windImage,'repeat');
     redraw();
+    drawWind(windCtx);
 }
 
 function leftTurn() {
@@ -58,16 +60,11 @@ function doIdle(event) {
 
 function clearCanvas(event) {
     ctx.clearRect(-can.width/2, -can.height/2, can.width, can.height);
-    windCtx.clearRect(-windCan.width/2, -windCan.height/2, windCan.width, windCan.height);
-    //make border
-    //ctx.strokeStyle = "#000000";
-    //ctx.strokeRect(-can.width/2, -can.height/2, can.width, can.height);	
 }
 
 function redraw() {
     clearCanvas();
     drawBG();
-    drawWind(windCtx);
     boat.draw(ctx);
     displayInfo(); 
 }
@@ -111,8 +108,6 @@ function doMouse(event)
     var pos = getMousePos(can, event);
     var polar = car2pol( { x: pos.x - (can.width/2), 
                             y: -( pos.y - (can.height/2) ) });
-    // boat.angle = polar.azi;
-    // boat.speed = polar.dist / 10;
 }
 
 function doClick(event)

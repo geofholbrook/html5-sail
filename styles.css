@@ -13,6 +13,9 @@
 .mainCanvas:after {
     padding-bottom: 50%;
 }
+.mainCanvas.overlay {
+    pointer-events: none;
+}
 
 .header {
     position:fixed;
