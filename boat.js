@@ -19,27 +19,40 @@ var mastBase = { x: boatSize/3, y: 0 };
 const MAX_RUDDER = Math.PI/4;
 
 // Change in heading at full rudder, speed: 1
-const HEADING_DELTA_MAX_RUDDER = Math.PI / 32;
+const HEADING_DELTA_MAX_RUDDER = Math.PI / 128;
 
 function Boat()
 {
-	this.angle = 0;
-	this.speed = 0;
+	this.angle = Math.PI;
+	this.speed = 1;
 	this.pos = { x:0, y:0 };
 	this.tilt = 0;
 	this.color = "#cd4236"
 	this.boom = 0;
-	this.sheet = 0; // The rope controlling the boom 
+	this.sheet = Math.PI/2; // The rope controlling the boom
+	this.rudder = 0; 
 }
 
 Boat.prototype.updatePos = function() {
+	let newAngle = this.angle + headingDelta(this.rudder, Math.max(0.1, this.speed));
+	let absAngle = Math.abs(newAngle);
+	if (absAngle > Math.PI) {
+		if (newAngle > 0) {
+			newAngle = -(Math.PI - (absAngle % Math.PI));
+		} else {
+			newAngle = Math.PI - (absAngle % Math.PI);
+		}
+	}
+	this.angle = newAngle;
+
+	this.sheet = this.calculateSheet(this.angle);
 
 	// set the boom angle to the opposite of the boat angle restricted by sheet
-	this.boom = clip(-boat.angle, -this.sheet, this.sheet);
+	this.boom = clip(-this.angle, -this.sheet, this.sheet);
 
-    this.tilt = Math.cos(boat.boom) * Math.sin(boat.angle + boat.boom) * 0.8;
+    this.tilt = Math.cos(this.boom) * Math.sin(this.angle + this.boom) * 0.8;
 
-	this.speed = -(Math.sin(boat.boom) * Math.sin(boat.angle + boat.boom)) * 15;   // wind is always 0
+	this.speed = -(Math.sin(this.boom) * Math.sin(this.angle + this.boom)) * 15;   // wind is always 0
 
 	this.pos.x += Math.cos(this.angle)*this.speed;
 	this.pos.y += Math.sin(this.angle)*this.speed;
@@ -122,15 +135,32 @@ Boat.prototype.calculateSheet = function(boatAngle) {
 	return relWindToRelBoom(boatAngle);
 }
 
+Boat.prototype.moveRudder = function(rudderDelta) {
+	let newRudder = this.rudder + rudderDelta;	
+	if (newRudder < -MAX_RUDDER) {
+		newRudder = -MAX_RUDDER;
+	} else if (newRudder > MAX_RUDDER) {
+		newRudder = MAX_RUDDER;
+	}
+	this.rudder = clip(this.rudder + rudderDelta, -MAX_RUDDER, MAX_RUDDER);
+}
+
 function relWindToRelBoom(relWind) {
     return (3- 3 * Math.cos(relWind))/4;
 }
 
-function updateHeading(rudder, speed) {
-	return rudderPercent * speed * HEADING_DELTA_MAX_RUDDER;
+function headingDelta(rudder, speed) {
+	return (rudderPercent(rudder)/100) * speed * HEADING_DELTA_MAX_RUDDER;
 }
 
 function rudderPercent(rudder) {
-	return (MAX_RUDDER / rudder) * 100;
+	if (Math.abs(rudder) < 0.001) {
+		rudder = 0.001;
+	}
+	return (rudder / MAX_RUDDER) * 100;
+}
+
+function relWindToRelBoom(relWind) {
+    return (3- 3 * Math.cos(relWind))/4;
 }
 
