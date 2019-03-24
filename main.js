@@ -16,6 +16,7 @@ const MINIMAP_CANVAS_HEIGHT = 300;
 const MAP_HEIGHT = 10000;
 const MAP_WIDTH = 10000;
 var minimap = null;
+var lastFrame = Date.now();
 function init() {
     waterImage = new Image();
     waterImage.src = 'lib/water-texture-3.jpg';
@@ -43,7 +44,8 @@ function init() {
     can.addEventListener("mouseup", doRelease, false);
     can.addEventListener("keydown", doKeyDown, false);
     can.addEventListener("wheel", doMouseWheel, false);
-    setInterval(doIdle, 50);
+
+    requestAnimationFrame(doIdle);
 }
     
 function waterImageLoaded() {
@@ -64,9 +66,15 @@ function leftTurn() {
 }
 
 function doIdle(event) {
+    if (Date.now() - lastFrame < 18) {
+        requestAnimationFrame(doIdle);
+        return;
+    }
+    lastFrame = Date.now();
     boat.updatePos();
     minimap.setBoatPos(boat.pos);
     redraw();	
+    requestAnimationFrame(doIdle);
 }
 
 function clearCanvas(event) {
