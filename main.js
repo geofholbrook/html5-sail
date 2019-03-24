@@ -32,7 +32,7 @@ function init() {
     can.addEventListener("mousedown", clearCanvas, false);
     can.addEventListener("mouseup", doRelease, false);
     can.addEventListener("keydown", doKeyDown, false);
-    can.addEventListener("mousewheel", doMouseWheel, false);
+    can.addEventListener("wheel", doMouseWheel, false);
     setInterval(doIdle, 50);
 }
     
@@ -161,6 +161,5 @@ function rotate(curAngle, delta=Math.PI/128) {
 }
 
 function doMouseWheel(event) {
-    accel = event.wheelDelta / 50;
-    boat.speed = Math.round( Math.max(0, boat.speed + accel) );
+    boat.moveRudder(deg2rad(event.deltaY/120));
 }
