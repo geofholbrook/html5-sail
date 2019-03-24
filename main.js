@@ -87,9 +87,12 @@ function displayInfo() {
     str = "boat angle: " + Math.round( rad2deg( boat.angle )) + 
             "\n | rudder: " + Math.round( rad2deg(boat.rudder )) +
             "\n | tilt: " + Math.round(rad2deg( boat.tilt )) + 
+            "\n | boom: " + Math.round(rad2deg(boat.boom)) + 
             "\n | boom-to-wind: " + Math.round(rad2deg( radDiff( boat.angle + boat.boom, windAngle ))) + 
             "\n | forward thrust " + Math.sin (boat.boom) * Math.sin (boat.angle + boat.boom) +
             "\n | speed: " + boat.speed + 
+            "\n | windAngle: " + Math.round(rad2deg(windAngle)) + 
+            "\n | relativeWind: " + Math.round(rad2deg(boat.relativeWind)) + 
             "\n | sheet: " + Math.round(rad2deg(boat.sheet)) +
             "\n | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";
     document.getElementById("footer").innerText = str;
@@ -133,15 +136,28 @@ function doKeyDown(event) {
         
         case 38: // up arrow
         //boat.speed += 5; 
-        boat.sheet = clip(boat.sheet+0.05, 0, 1.4);
+        // boat.sheet = clip(boat.sheet+0.05, 0, 1.4);
+        windAngle = rotate(windAngle);
+        drawWind(windCtx);
         break;
         
         case 40: // down arrow
-        boat.sheet = clip(boat.sheet-0.05, 0, 1.4);
+        windAngle = rotate(windAngle, -Math.PI/128);
+        drawWind(windCtx);
         break;	
     }
 
-    boat.sheet = boat.calculateSheet(boat.angle);
+    boat.sheet = boat.calculateSheet(boat.relativeWind);
+}
+
+function rotate(curAngle, delta=Math.PI/128) {
+    let newAngle = (curAngle + delta);
+    if (newAngle > Math.PI) {
+        newAngle = (newAngle % Math.PI) - Math.PI;
+    } else if (newAngle < -Math.PI) {
+        newAngle = Math.PI - (newAngle % Math.PI);
+    } 
+    return newAngle;
 }
 
 function doMouseWheel(event) {

@@ -30,9 +30,11 @@ function Boat()
 	this.boom = 0;
 	this.sheet = Math.PI/2; // The rope controlling the boom
 	this.rudder = 0; 
+	this.relativeWind = calculateRelativeWind(windAngle, this.angle);
 }
 
 Boat.prototype.updatePos = function() {
+	// resolve boat angle (heading) based on speed and rudder angle
 	let newAngle = this.angle + headingDelta(this.rudder, Math.max(0.1, this.speed));
 	let absAngle = Math.abs(newAngle);
 	if (absAngle > Math.PI) {
@@ -43,12 +45,14 @@ Boat.prototype.updatePos = function() {
 		}
 	}
 	this.angle = newAngle;
-	this.sheet = this.calculateSheet(this.angle);
+
+	this.relativeWind = calculateRelativeWind(windAngle, this.angle);
+	this.sheet = this.calculateSheet(this.relativeWind);
 
 	// set the boom angle to the opposite of the boat angle restricted by sheet
-	this.boom = clip(-this.angle, -this.sheet, this.sheet);
-    this.tilt = Math.cos(this.boom) * Math.sin(this.angle + this.boom) * 0.8;
-	this.speed = -(Math.sin(this.boom) * Math.sin(this.angle + this.boom)) * 15;   // wind is always 0
+	this.boom = clip(-this.relativeWind, -this.sheet, this.sheet);
+    this.tilt = Math.cos(this.boom) * Math.sin(this.relativeWind + this.boom) * 0.8;
+	this.speed = -(Math.sin(this.boom) * Math.sin(this.relativeWind + this.boom)) * 15;   // wind is always 0
 	this.pos.x += Math.cos(this.angle)*this.speed;
 	this.pos.y += Math.sin(this.angle)*this.speed;
 }
@@ -128,7 +132,7 @@ Boat.prototype.draw = function (ctx) {
  * @returns Optimized sheet value
  */
 Boat.prototype.calculateSheet = function(boatAngle) {
-	return relWindToRelBoom(boatAngle);
+	return Math.abs(relWindToRelBoom(boatAngle));
 }
 
 /**
@@ -170,5 +174,16 @@ function rudderPercent(rudder) {
  */
 function relWindToRelBoom(relWind) {
     return (3- 3 * Math.cos(relWind))/4;
+}
+
+function calculateRelativeWind(wind, heading) {
+	let newAngle = (heading - wind);
+    if (newAngle < -Math.PI) {
+        newAngle = Math.PI + (newAngle % Math.PI);  // (newAngle % Math.PI) - Math.PI;
+    } else if (newAngle > Math.PI) {
+        newAngle = -Math.PI + (newAngle % Math.PI); //  - newAngle; // (newAngle % Math.PI);
+    } 
+    return newAngle;
+	// return ((wind - heading) + Math.PI) % (2*Math.PI);
 }
 
