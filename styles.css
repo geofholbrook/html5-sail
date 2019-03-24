@@ -1,29 +1,33 @@
-#waterCanvas {
-}	
-
+#zoomView {
+    position: relative;
+    width: 40%;
+    display: flex;
+    flex-wrap: nowrap;
+}
+#miniMap {
+    width: 40%;
+    display: flex;
+}
+#viewsContainer {
+    position: absolute;
+    width: 100%;
+    display: inline-flex;
+}
 .mainCanvas {
     position: absolute;
     top:0;
     bottom: 0;
     left: 0;
     right: 0;
-    width: 50%;
-    margin:auto;
+    width: 100%;
 }
-.mainCanvas:after {
-    padding-bottom: 50%;
-}
+
 .mainCanvas.overlay {
     pointer-events: none;
 }
 
-.header {
-    position:fixed;
-    top:0;
-    left:50%;
-    margin-left:-200px; /*negative half the width */
-    width:600px;
-    height:25px;
+#header {
+    text-align: center; 
 }
 
 .footer {

@@ -9,11 +9,18 @@
 		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<body> 
-	<canvas id="waterCanvas" class="mainCanvas" tabindex='1'>
-		fallback
-	</canvas>
-	<canvas id="windCanvas" class="mainCanvas overlay"></canvas> <br>
-	<div class="header" id="header"> sailing simulator rudder ctl</div>
+		<h1 id="header"> sailing simulator rudder ctl</h1>
+		<div id="viewsContainer">
+			<div id="miniMap"></div>
+			<div id="zoomView">
+				<canvas id="waterCanvas" class="mainCanvas" tabindex='1'>
+					fallback
+				</canvas>
+				<canvas id="windCanvas" class="mainCanvas overlay"></canvas> <br>
+			</div>
+		</div>
+		<span>text</span>
+	<canvas id="minimap"></canvas> <br />
 	<div class="footer" id="footer"> left/right = rudder;</div>
 </body>
 
