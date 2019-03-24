@@ -1,15 +1,12 @@
 #zoomView {
     position: relative;
-    width: 40%;
-    display: flex;
-    flex-wrap: nowrap;
+    height: fit-content;
 }
 #miniMap {
-    width: 40%;
-    display: flex;
+    display: inline-flex;
+    height: fit-content;
 }
 #viewsContainer {
-    position: absolute;
     width: 100%;
     display: inline-flex;
 }
@@ -19,7 +16,6 @@
     bottom: 0;
     left: 0;
     right: 0;
-    width: 100%;
 }
 
 .mainCanvas.overlay {
