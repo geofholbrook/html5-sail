@@ -1,6 +1,7 @@
 <html> 
 	<head>
 		<title>sail boat simulator</title> 
+		<script src="./minimap.js"></script>
 		<script src="./lib/math.js"></script>
 		<script src="./lib/hsl2rgb.js"></script>
 		<script src="./boat.js"></script>
@@ -11,7 +12,9 @@
 	<body> 
 		<h1 id="header"> sailing simulator rudder ctl</h1>
 		<div id="viewsContainer">
-			<div id="miniMap"></div>
+			<div id="miniMap">
+				<canvas id="miniMapCanvas"></canvas>
+			</div>
 			<div id="zoomView">
 				<canvas id="waterCanvas" class="mainCanvas" tabindex='1'>
 					fallback
@@ -19,7 +22,6 @@
 				<canvas id="windCanvas" class="mainCanvas overlay"></canvas> <br>
 			</div>
 		</div>
-		<span>text</span>
 	<canvas id="minimap"></canvas> <br />
 	<div class="footer" id="footer"> left/right = rudder;</div>
 </body>

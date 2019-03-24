@@ -19,6 +19,7 @@ const MAX_RUDDER = Math.PI/4;
 
 // Change in heading at full rudder, speed: 1
 const HEADING_DELTA_MAX_RUDDER = Math.PI / 128;
+const MAX_POS = 5000;
 
 function Boat()
 {
@@ -53,8 +54,8 @@ Boat.prototype.updatePos = function() {
 	this.boom = clip(-this.relativeWind, -this.sheet, this.sheet);
     this.tilt = Math.cos(this.boom) * Math.sin(this.relativeWind + this.boom) * 0.8;
 	this.speed = -(Math.sin(this.boom) * Math.sin(this.relativeWind + this.boom)) * 15;   // wind is always 0
-	this.pos.x += Math.cos(this.angle)*this.speed;
-	this.pos.y += Math.sin(this.angle)*this.speed;
+	this.pos.x = clip(this.pos.x + Math.cos(this.angle)*this.speed, -MAX_POS, MAX_POS);
+	this.pos.y = clip(this.pos.y + Math.sin(this.angle)*this.speed, -MAX_POS, MAX_POS);
 }
 
 Boat.prototype.drawSail = function (ctx) {

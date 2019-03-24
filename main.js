@@ -2,6 +2,7 @@ window.onload = init;
 
 var can;
 var windCan;
+var miniMapCanvas;
 var ctx;
 var windCtx;
 var waterImage;
@@ -10,17 +11,26 @@ var boat;
 var bgPatt = null;
 const MAIN_CANVAS_WIDTH = 800;
 const MAIN_CANVAS_HEIGHT = 500;
+const MINIMAP_CANVAS_WIDTH = 300;
+const MINIMAP_CANVAS_HEIGHT = 300;
+const MAP_HEIGHT = 10000;
+const MAP_WIDTH = 10000;
+var minimap = null;
 function init() {
     waterImage = new Image();
     waterImage.src = 'lib/water-texture-3.jpg';
     can = document.getElementById("waterCanvas");
     windCan = document.getElementById("windCanvas");
+    miniMapCanvas = document.getElementById("miniMapCanvas");
     can.width = MAIN_CANVAS_WIDTH;
+    can.height = MAIN_CANVAS_HEIGHT;
     windCan.width = MAIN_CANVAS_WIDTH;
     windCan.height = MAIN_CANVAS_HEIGHT;
-    can.height = MAIN_CANVAS_HEIGHT;
+    miniMapCanvas.width = MINIMAP_CANVAS_WIDTH + 5;  // padding to simplify drawing
+    miniMapCanvas.height = MINIMAP_CANVAS_HEIGHT + 5;
     ctx = can.getContext("2d");
     windCtx = windCan.getContext("2d");
+    minimap = new MiniMap(MINIMAP_CANVAS_HEIGHT, MINIMAP_CANVAS_WIDTH, miniMapCanvas, {x: 0,y:0});
     boat = new Boat();
     ctx.clearRect(-can.width/2, -can.height/2, can.width, can.height);
     windCtx.clearRect(-can.width/2, -can.height/2, can.width, can.height);
@@ -55,6 +65,7 @@ function leftTurn() {
 
 function doIdle(event) {
     boat.updatePos();
+    minimap.setBoatPos(boat.pos);
     redraw();	
 }
 
@@ -123,12 +134,14 @@ function doRelease(event) {}
 function doKeyDown(event) {
     switch(event.keyCode) {
         case 37: // left arrow
+        event.preventDefault();
         boat.moveRudder(Math.PI/128);
         // boat.angle = modulo(boat.angle + 0.15 + Math.PI, Math.PI*2) - Math.PI;
         // boat.tilt += -0.1;
         break;
 
         case 39: // right arrow
+        event.preventDefault();
         boat.moveRudder(-Math.PI/128);  
         // boat.angle = modulo(boat.angle - 0.15 + Math.PI, Math.PI*2) - Math.PI;
         // boat.tilt += 0.1;
