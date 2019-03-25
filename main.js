@@ -22,6 +22,7 @@ var minimap, wind, boat, water;
 
 // controls
 var stopBtn, resetPosBtn, frameRateDisplay, rudderDisplay, frameRateCtrl, rudderCtrl;
+var windCtrl, windDisplay;
 
 // Time of last animation frame (for controlling framerate)
 var lastFrame = Date.now();
@@ -34,14 +35,21 @@ function init() {
 
     stopBtn = document.getElementById("stopBtn");
     resetPosBtn = document.getElementById("resetPosBtn");
+
     frameRateCtrl = document.getElementById("frameRateCtrl");
-    rudderCtrl = document.getElementById("rudderCtrl");
     frameRateDisplay = document.getElementById("frameRateDisplay");
-    rudderDisplay = document.getElementById("rudderDisplay");
     frameRateDisplay.value = frameRate;
     frameRateDisplay.disabled = true;
+
+    rudderCtrl = document.getElementById("rudderCtrl");
+    rudderDisplay = document.getElementById("rudderDisplay");
     rudderDisplay.disabled = true;
     rudderDisplay.value = 0;
+
+    windCtrl = document.getElementById("windCtrl");
+    windDisplay = document.getElementById("windDisplay");
+    windDisplay.value = 0;
+    windDisplay.disabled = true;
 
     waterCanvas.width = MAIN_CANVAS_WIDTH;
     waterCanvas.height = MAIN_CANVAS_HEIGHT;
@@ -63,6 +71,7 @@ function init() {
     frameRateCtrl.addEventListener("input", onFrameRateInput, false);
     rudderCtrl.addEventListener("input", onRudderInput, false);
     rudderCtrl.addEventListener("mouseup", onRudderMouseup);
+    windCtrl.addEventListener("input", onWindInput, false);
 
     requestAnimationFrame(doIdle);
 }
@@ -75,6 +84,12 @@ function onFrameRateInput(ev) {
 function onRudderInput(ev) {
     boat.rudder = -ev.srcElement.value;
     rudderDisplay.value = Math.round(rad2deg(boat.rudder));
+}
+
+function onWindInput(ev) {
+    wind.angle = +ev.srcElement.value;
+    windDisplay.value = Math.round(rad2deg(wind.angle));
+    wind.drawWind();
 }
 
 function onRudderMouseup(ev) {

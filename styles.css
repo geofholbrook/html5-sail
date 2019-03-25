@@ -58,11 +58,7 @@
     margin: 10px;
 }
 
-#frameRateDisplay {
-    width: 4ch;
-}
-
-#rudderDisplay {
+.sliderContainer>input {
     width: 4ch;
 }
 
