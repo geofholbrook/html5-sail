@@ -51,7 +51,9 @@ class Boat {
 		// set the boom angle to the opposite of the boat angle restricted by sheet
 		this.boom = clip(-this.relativeWind, -this.sheet, this.sheet);
 		this.tilt = Math.cos(this.boom) * Math.sin(this.relativeWind + this.boom) * 0.8;
-		this.speed = -(Math.sin(this.boom) * Math.sin(this.relativeWind + this.boom)) * 15;   // wind is always 0
+		let newSpeed = -(Math.sin(this.boom) * Math.sin(this.relativeWind + this.boom)) * 15;
+		let speedDelta = newSpeed - this.speed;
+		this.speed += speedDelta * INERTIA;
 		this.pos.x = clip(this.pos.x + Math.cos(this.angle)*this.speed, -MAP_WIDTH/2, MAP_WIDTH/2);
 		this.pos.y = clip(this.pos.y + Math.sin(this.angle)*this.speed, -MAP_HEIGHT/2, MAP_HEIGHT/2);
 	}

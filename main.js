@@ -15,6 +15,9 @@ const MAP_WIDTH = 10000;
 
 const FRAME_RATE = 30;
 
+// Scale changes in speed to simulate inertia
+const INERTIA = 0.05;  
+
 var minimap, wind, boat, water;
 
 // controls
