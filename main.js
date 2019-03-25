@@ -40,7 +40,8 @@ function init() {
     rudderDisplay = document.getElementById("rudderDisplay");
     frameRateDisplay.value = frameRate;
     frameRateDisplay.disabled = true;
-    rudderDisplay.value = boat.rudder;
+    rudderDisplay.disabled = true;
+    rudderDisplay.value = 0;
 
     waterCanvas.width = MAIN_CANVAS_WIDTH;
     waterCanvas.height = MAIN_CANVAS_HEIGHT;
@@ -59,8 +60,9 @@ function init() {
     waterCanvas.addEventListener("wheel", onMouseWheel, false);
     stopBtn.addEventListener("click", toggleLoop, false);
     resetPosBtn.addEventListener("click", resetPos, false);
-    frameRateCtrl.addEventListener("change", onFrameRateInput, false);
-    rudderCtrl.addEventListener("change", onRudderInput, false);
+    frameRateCtrl.addEventListener("input", onFrameRateInput, false);
+    rudderCtrl.addEventListener("input", onRudderInput, false);
+    rudderCtrl.addEventListener("mouseup", onRudderMouseup);
 
     requestAnimationFrame(doIdle);
 }
@@ -71,8 +73,13 @@ function onFrameRateInput(ev) {
 }
 
 function onRudderInput(ev) {
-    boat.rudder = +ev.srcElement.value;
-    rudderDisplay.value = boat.rudder;
+    boat.rudder = -ev.srcElement.value;
+    rudderDisplay.value = Math.round(rad2deg(boat.rudder));
+}
+
+function onRudderMouseup(ev) {
+    boat.rudder = 0;
+    rudderDisplay.value = 0;
 }
 
 function toggleLoop() {
