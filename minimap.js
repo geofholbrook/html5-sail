@@ -10,19 +10,16 @@ class MiniMap {
     }
 
     setBoatPos(pos) {
-        
         let offsetX = this.width/2;
         let offsetY = this.height/2;
-        let x = this.boatPos.x/5000;
-        let y = -this.boatPos.y/5000;
-        this.context.clearRect(offsetX + offsetX*x - 2, offsetY + offsetY*y-2, 10, 10);
+        let x = this.boatPos.x/(MAP_WIDTH/2);
+        let y = -this.boatPos.y/(MAP_HEIGHT/2);
+        this.context.clearRect(offsetX + offsetX*x - 5, offsetY + offsetY*y-5, 20, 20);
         
         this.context.strokeRect(0, 0, this.height+5, this.width+5);
         this.boatPos = pos;
-        x = this.boatPos.x/5000;
-        y = -this.boatPos.y/5000;
+        x = this.boatPos.x/(MAP_WIDTH/2);
+        y = -this.boatPos.y/(MAP_HEIGHT/2);
         this.context.fillRect(offsetX + offsetX*x, offsetY + offsetY*y, 5, 5);
     }
-
-    
 }

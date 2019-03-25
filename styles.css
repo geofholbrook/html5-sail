@@ -1,15 +1,30 @@
+/* container for the zoomed-in view and wind canvases */
 #zoomView {
     position: relative;
     height: fit-content;
 }
+
+/* The canvas containing the mini-map */
 #miniMap {
+    position: relative;
     display: inline-flex;
-    height: fit-content;
+    height: 100%;
+    margin: 10px;
+    align-items: center;
 }
+
+#miniMapCanvas {
+    display: inline-block;
+}
+
+/* container for mini-map and zoomView */
 #viewsContainer {
     width: 100%;
+    height: 500px;
     display: inline-flex;
 }
+
+/* the canvas elements for the zoomView */
 .mainCanvas {
     position: absolute;
     top:0;
@@ -18,6 +33,7 @@
     right: 0;
 }
 
+/* the wind canvas */
 .mainCanvas.overlay {
     pointer-events: none;
 }
