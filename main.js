@@ -17,13 +17,19 @@ const FRAME_RATE = 30;
 
 var minimap, wind, boat, water;
 
+// controls
+var stopBtn;
+
 // Time of last animation frame (for controlling framerate)
 var lastFrame = Date.now();
+var stopped = false;
 
 function init() {
     let waterCanvas = document.getElementById("waterCanvas");
     let windCan = document.getElementById("windCanvas");
     let miniMapCanvas = document.getElementById("miniMapCanvas");
+
+    stopBtn = document.getElementById("stopBtn");
 
     waterCanvas.width = MAIN_CANVAS_WIDTH;
     waterCanvas.height = MAIN_CANVAS_HEIGHT;
@@ -40,11 +46,26 @@ function init() {
 
     waterCanvas.addEventListener("keydown", onKeyDown, false);
     waterCanvas.addEventListener("wheel", onMouseWheel, false);
+    stopBtn.addEventListener("click", toggleLoop, false);
 
     requestAnimationFrame(doIdle);
 }
 
+function toggleLoop() {
+    stopped = !stopped;
+    if (stopped) {
+        stopBtn.innerText = "Start";
+    } else {
+        stopBtn.innerText = "Stop";
+        requestAnimationFrame(doIdle);
+    }
+}
+
 function doIdle(event) {
+    if (stopped) {
+        return;
+    }
+
     if (Date.now() - lastFrame < (1000 / FRAME_RATE)) {
         requestAnimationFrame(doIdle);
         return;

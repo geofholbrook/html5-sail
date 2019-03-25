@@ -42,8 +42,13 @@
     text-align: center; 
 }
 
+#controls {
+    display: inline-flex;
+}
+
 .footer {
-    position:fixed;
+    position: relative;
+    display: block;
     bottom:0;
     width:600px;
 }
