@@ -24,8 +24,22 @@
 			</div>
 		</div>
 		<div id="controls">
-			<button id="stopBtn">Stop</button>
-			<button id="resetPosBtn">Reset Boat to Center</button>
+			<button id="stopBtn" class="dashboardBtn">Stop</button>
+			<button id="resetPosBtn" class="dashboardBtn">Reset Boat to Center</button>
+			<div id="frameRateContainer" class="sliderContainer">
+				<span>Frame Rate</span>
+				<input type="text" id="frameRateDisplay"></textbox>
+				<div>
+					<input id="frameRateCtrl" type="range" min="10" max="60"/>
+				</div>
+			</div>
+			<div id="wheelContainer" class="sliderContainer">
+				<span>Frame Rate</span>
+				<input type="text" id="rudderDisplay"></textbox>
+				<div>
+					<input id="rudderCtrl" type="range" min="-45" max="45" step="${Math.PI/128}" />
+				</div>
+			</div>
 		</div>
 		<div class="footer" id="footer"> left/right = rudder;</div>
 	</body>

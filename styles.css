@@ -46,6 +46,26 @@
     display: inline-flex;
 }
 
+.dashboardBtn {
+    margin: 10px;
+    height: 50px;
+    min-width: 70px;
+}
+
+.sliderContainer {
+    display: inline-block;
+    align-items: center;
+    margin: 10px;
+}
+
+#frameRateDisplay {
+    width: 4ch;
+}
+
+#rudderDisplay {
+    width: 4ch;
+}
+
 .footer {
     position: relative;
     display: block;

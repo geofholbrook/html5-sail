@@ -13,7 +13,7 @@ const WATER_IMG_SRC = 'lib/water-texture-3.jpg';
 const MAP_HEIGHT = 10000;
 const MAP_WIDTH = 10000;
 
-const FRAME_RATE = 30;
+var frameRate = 30;
 
 // Scale changes in speed to simulate inertia
 const INERTIA = 0.05;  
@@ -21,7 +21,7 @@ const INERTIA = 0.05;
 var minimap, wind, boat, water;
 
 // controls
-var stopBtn, resetPosBtn;
+var stopBtn, resetPosBtn, frameRateDisplay, rudderDisplay, frameRateCtrl, rudderCtrl;
 
 // Time of last animation frame (for controlling framerate)
 var lastFrame = Date.now();
@@ -34,6 +34,13 @@ function init() {
 
     stopBtn = document.getElementById("stopBtn");
     resetPosBtn = document.getElementById("resetPosBtn");
+    frameRateCtrl = document.getElementById("frameRateCtrl");
+    rudderCtrl = document.getElementById("rudderCtrl");
+    frameRateDisplay = document.getElementById("frameRateDisplay");
+    rudderDisplay = document.getElementById("rudderDisplay");
+    frameRateDisplay.value = frameRate;
+    frameRateDisplay.disabled = true;
+    rudderDisplay.value = boat.rudder;
 
     waterCanvas.width = MAIN_CANVAS_WIDTH;
     waterCanvas.height = MAIN_CANVAS_HEIGHT;
@@ -52,8 +59,20 @@ function init() {
     waterCanvas.addEventListener("wheel", onMouseWheel, false);
     stopBtn.addEventListener("click", toggleLoop, false);
     resetPosBtn.addEventListener("click", resetPos, false);
+    frameRateCtrl.addEventListener("change", onFrameRateInput, false);
+    rudderCtrl.addEventListener("change", onRudderInput, false);
 
     requestAnimationFrame(doIdle);
+}
+
+function onFrameRateInput(ev) {
+    frameRate = +ev.srcElement.value;
+    frameRateDisplay.value = frameRate;
+}
+
+function onRudderInput(ev) {
+    boat.rudder = +ev.srcElement.value;
+    rudderDisplay.value = boat.rudder;
 }
 
 function toggleLoop() {
@@ -75,7 +94,7 @@ function doIdle(event) {
         return;
     }
 
-    if (Date.now() - lastFrame < (1000 / FRAME_RATE)) {
+    if (Date.now() - lastFrame < (1000 / frameRate)) {
         requestAnimationFrame(doIdle);
         return;
     }
