@@ -80,6 +80,7 @@ function onRudderInput(ev) {
 function onRudderMouseup(ev) {
     boat.rudder = 0;
     rudderDisplay.value = 0;
+    rudderCtrl.value = 0;
 }
 
 function toggleLoop() {
