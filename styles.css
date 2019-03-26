@@ -1,42 +1,58 @@
 body {
-    min-width: 1200px;
+    min-width: 900px;
     min-height: 1200px;
 }
-/* container for the zoomed-in view and wind canvases */
-#zoomView {
-    position: relative;
-    height: fit-content;
+
+#simControls {
+    display: block;
     width: 50%;
-    max-width: 800px;
+    margin-left: 25%;
+    text-align: center;
+    border-style: solid;
+    border-color: grey;
 }
 
-/* The canvas containing the mini-map */
-#miniMap {
-    position: relative;
-    display: inline-flex;
-    margin: 10px;
-    align-items: top;
+.dashboardBtn {
+    display: inline;
 }
 
-#miniMapCanvas {
+#frameRateContainer {
     display: inline-block;
-    width: 100%;
-    padding-bottom: auto;
-}
-#miniMapCanvas::after {
-    padding-bottom: 90%;
+    vertical-align: middle;
+    margin: auto;
 }
 
 /* container for mini-map and zoomView */
 #viewsContainer {
-    position: relative;
-    width: 100%;
+    min-width: 810px;
+    height: 325px;
+    float: left;
+    margin: 10px;
+}
+
+/* The canvas containing the mini-map */
+#miniMap {
+    margin-right: 10px;
     height: 300px;
-    display: inline-flex;
+    width: 300px;
+    display: inline-block;
+}
+
+#miniMapCanvas {
+    width: 300px;
+    height: 300px;
+}
+
+/* container for the water and wind canvases */
+#zoomView {
+    position: absolute;
+    display: inline-block;
+    height: 300px;
+    width: 500px;
 }
 
 /* the canvas elements for the zoomView */
-.mainCanvas {
+#waterCanvas {
     position: absolute;
     top:0;
     bottom: 0;
@@ -44,8 +60,8 @@ body {
     right: 0;
 }
 
-/* the wind canvas */
-.mainCanvas.overlay {
+#windCanvas {
+    position: absolute;
     pointer-events: none;
 }
 
@@ -56,19 +72,6 @@ body {
 #dashboardContainer {
     display: inline-block;
     width: 75%;
-}
-
-#simControls {
-    display: inline-block;
-    width: 32%;
-    text-align: center;
-    border-style: solid;
-    border-color: grey;
-}
-
-#frameRateContainer {
-    display: inline-block;
-    margin: auto;
 }
 
 #boatControls {
@@ -96,7 +99,7 @@ body {
 #dataContainer {
     display: inline-block;
     width: 25%;
-    min-width: 360px;
+    width: 360px;
     border-style: solid;
     border-color: grey;
 }

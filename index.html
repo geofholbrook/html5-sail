@@ -13,6 +13,17 @@
 	</head>
 	<body> 
 		<h1 id="header">Sailing Sim</h1>
+			<div id="simControls">
+					<button id="stopBtn" class="dashboardBtn">Stop</button>
+					<button id="resetPosBtn" class="dashboardBtn">Reset Boat to Center</button>
+				<div id="frameRateContainer" class="sliderContainer">
+					<span>Frame Rate</span>
+					<input type="text" id="frameRateDisplay"></textbox>
+					<div>
+						<input id="frameRateCtrl" type="range" min="10" max="60"/>
+					</div>
+				</div>
+			</div>
 		<div id="viewsContainer">
 			<div id="miniMap">
 				<canvas id="miniMapCanvas"></canvas>
@@ -23,6 +34,8 @@
 				</canvas>
 				<canvas id="windCanvas" class="mainCanvas overlay"></canvas>
 			</div>
+
+		</div>
 			<div id="dataContainer">
 				<div class="guageContainer">
 						<canvas id="speedGuage" class="fancyGuage" data-type="radial-gauge"
@@ -48,7 +61,7 @@
 						data-color-value-box-background="false"
 						data-value-int="1"
 						data-value-dec="2"
-						data-animation-duration="50"
+						data-animation-duration="15"
 				></canvas>
 				</div>
 				<div class="guageContainer">
@@ -95,27 +108,12 @@
 						data-font-title-size="19"
 						data-font-numbers-size="25"
 						data-color-title="#f5f5f5"
-						data-animation-duration="50"
+						data-animation-duration="15"
 					></canvas>
 				</div>
-			<div class="footer" id="footer"> left/right = rudder;</div>
+				<div class="footer" id="footer"> left/right = rudder;</div>
 			</div>
-		</div>
-
 		<div id="dashboardContainer">
-			<div id="simControls">
-				<div>
-					<button id="stopBtn" class="dashboardBtn">Stop</button>
-					<button id="resetPosBtn" class="dashboardBtn">Reset Boat to Center</button>
-				</div>
-				<div id="frameRateContainer" class="sliderContainer">
-					<span>Frame Rate</span>
-					<input type="text" id="frameRateDisplay"></textbox>
-					<div>
-						<input id="frameRateCtrl" type="range" min="10" max="60"/>
-					</div>
-				</div>
-			</div>
 			<div id="boatControls">
 				<div id="wheelContainer" class="sliderContainer">
 					<span>Rudder Angle</span>
