@@ -1,7 +1,7 @@
 window.onload = init;
 
-const MAIN_CANVAS_WIDTH = 800;
-const MAIN_CANVAS_HEIGHT = 500;
+const MAIN_CANVAS_WIDTH = 500;
+const MAIN_CANVAS_HEIGHT = 300;
 
 const MINIMAP_CANVAS_WIDTH = 300;
 const MINIMAP_CANVAS_HEIGHT = 300;
@@ -124,14 +124,12 @@ function doIdle(event) {
         return;
     }
 
-    if (Date.now() - lastFrame < (1000 / frameRate)) {
-        requestAnimationFrame(doIdle);
-        return;
+    if (Date.now() - lastFrame > (1000 / frameRate)) {
+        lastFrame = Date.now();
+        boat.updatePos();
+        minimap.setBoatPos(boat.pos);
+        redraw();	
     }
-    lastFrame = Date.now();
-    boat.updatePos();
-    minimap.setBoatPos(boat.pos);
-    redraw();	
     requestAnimationFrame(doIdle);
 }
 
@@ -145,14 +143,10 @@ function redraw() {
 function displayInfo() {
     speedGuage.setAttribute("data-value", boat.speed);
     boatAngleGuage.setAttribute("data-value",-rad2deg(boat.angle - Math.PI/2));
-    str = "boat angle: " + Math.round( rad2deg( boat.angle )) + 
-            "\n | rudder: " + Math.round( rad2deg(boat.rudder )) +
-            "\n | tilt: " + Math.round(rad2deg( boat.tilt )) + 
+    let str = "| tilt: " + Math.round(rad2deg( boat.tilt )) + 
             "\n | boom: " + Math.round(rad2deg(boat.boom)) + 
             "\n | boom-to-wind: " + Math.round(rad2deg( radDiff( boat.angle + boat.boom, wind.angle ))) + 
             "\n | forward thrust " + Math.sin (boat.boom) * Math.sin (boat.angle + boat.boom) +
-            "\n | speed: " + boat.speed + 
-            "\n | windAngle: " + Math.round(rad2deg(wind.angle)) + 
             "\n | relativeWind: " + Math.round(rad2deg(boat.relativeWind)) + 
             "\n | sheet: " + Math.round(rad2deg(boat.sheet)) +
             "\n | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";

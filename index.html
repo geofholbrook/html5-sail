@@ -26,8 +26,8 @@
 			<div id="dataContainer">
 				<div class="guageContainer">
 						<canvas id="speedGuage" class="fancyGuage" data-type="radial-gauge"
-						data-width="180"
-						data-height="180"
+						data-width="170"
+						data-height="170"
 						data-animated-value=true
 						data-border-radius="0"
 						data-borders="0"
@@ -53,6 +53,7 @@
 				</div>
 				<div class="guageContainer">
 					<canvas id="boatAngleGuage" class="fancyGuage" data-type="radial-gauge"
+						data-animated-value="true"
 						data-width="180"
 						data-height="180"
 						data-min-value="0"
@@ -94,9 +95,10 @@
 						data-font-title-size="19"
 						data-font-numbers-size="25"
 						data-color-title="#f5f5f5"
-						data-animation-duration="150"
+						data-animation-duration="50"
 					></canvas>
 				</div>
+			<div class="footer" id="footer"> left/right = rudder;</div>
 			</div>
 		</div>
 
@@ -130,7 +132,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="footer" id="footer"> left/right = rudder;</div>
 		</div>
 	</body>
 </html>
