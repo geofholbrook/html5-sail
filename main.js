@@ -22,11 +22,14 @@ var minimap, wind, boat, water;
 
 // controls
 var stopBtn, resetPosBtn, frameRateDisplay, rudderDisplay, frameRateCtrl, rudderCtrl;
-var windCtrl, windDisplay;
+var windCtrl, windDisplay, speedMeter;
 
 // Time of last animation frame (for controlling framerate)
 var lastFrame = Date.now();
 var stopped = false;
+
+var boatAngleGauge;
+var speedGuage;
 
 function init() {
     let waterCanvas = document.getElementById("waterCanvas");
@@ -51,6 +54,11 @@ function init() {
     windDisplay.value = 0;
     windDisplay.disabled = true;
 
+    speedMeter = document.getElementById("speedMeter");
+
+    // boatAngleGuage = document.getElementById("boatAngleGuage");
+    speedGuage = document.getElementById("speedGuage");
+
     waterCanvas.width = MAIN_CANVAS_WIDTH;
     waterCanvas.height = MAIN_CANVAS_HEIGHT;
     windCan.width = MAIN_CANVAS_WIDTH;
@@ -72,7 +80,6 @@ function init() {
     rudderCtrl.addEventListener("input", onRudderInput, false);
     rudderCtrl.addEventListener("mouseup", onRudderMouseup);
     windCtrl.addEventListener("input", onWindInput, false);
-
     requestAnimationFrame(doIdle);
 }
 
@@ -136,6 +143,8 @@ function redraw() {
 }
 
 function displayInfo() {
+    speedGuage.setAttribute("data-value", boat.speed);
+    boatAngleGuage.setAttribute("data-value",-rad2deg(boat.angle - Math.PI/2));
     str = "boat angle: " + Math.round( rad2deg( boat.angle )) + 
             "\n | rudder: " + Math.round( rad2deg(boat.rudder )) +
             "\n | tilt: " + Math.round(rad2deg( boat.tilt )) + 

@@ -2,12 +2,14 @@
 #zoomView {
     position: relative;
     height: fit-content;
+    width: 50%;
 }
 
 /* The canvas containing the mini-map */
 #miniMap {
     position: relative;
     display: inline-flex;
+    width: 25%;
     height: 100%;
     margin: 10px;
     align-items: center;
@@ -15,6 +17,7 @@
 
 #miniMapCanvas {
     display: inline-block;
+    width: 100%;
 }
 
 /* container for mini-map and zoomView */
@@ -42,8 +45,29 @@
     text-align: center; 
 }
 
-#controls {
-    display: inline-flex;
+#dashboardContainer {
+    display: inline-block;
+    width: 75%;
+}
+
+#simControls {
+    display: inline-block;
+    width: 32%;
+    text-align: center;
+    border-style: solid;
+    border-color: grey;
+}
+
+#frameRateContainer {
+    display: inline-block;
+    margin: auto;
+}
+
+#boatControls {
+    width: 66%;
+    border-style: solid;
+    border-color: grey;
+    display: inline-block;
 }
 
 .dashboardBtn {
@@ -54,12 +78,31 @@
 
 .sliderContainer {
     display: inline-block;
-    align-items: center;
-    margin: 10px;
+    margin: auto;
 }
 
 .sliderContainer>input {
     width: 4ch;
+}
+
+#dataContainer {
+    display: inline-block;
+    width: 25%;
+    height: 500px;
+    border-style: solid;
+    border-color: grey;
+}
+
+.guageContainer {
+    text-align: center;
+    display: inline-block;
+    width: 45%;
+}
+
+.fancyGuage {
+    display: inline-block;
+    padding: 5%;
+    margin: auto;
 }
 
 .footer {
