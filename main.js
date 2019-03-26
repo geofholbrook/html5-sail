@@ -26,10 +26,17 @@ var windCtrl, windDisplay, speedMeter;
 
 // Time of last animation frame (for controlling framerate)
 var lastFrame = Date.now();
+var curAnimationFrame;
 var stopped = false;
 
 var boatAngleGauge;
 var speedGuage;
+
+var speedAverage = 0;
+var speedIdx = 0;
+const SPEED_AVG_ENTRIES = 10;
+var speedEntries = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var speedSum = 0;
 
 function init() {
     let waterCanvas = document.getElementById("waterCanvas");
@@ -80,7 +87,7 @@ function init() {
     rudderCtrl.addEventListener("input", onRudderInput, false);
     rudderCtrl.addEventListener("mouseup", onRudderMouseup);
     windCtrl.addEventListener("input", onWindInput, false);
-    requestAnimationFrame(doIdle);
+    toggleLoop();
 }
 
 function onFrameRateInput(ev) {
@@ -109,9 +116,10 @@ function toggleLoop() {
     stopped = !stopped;
     if (stopped) {
         stopBtn.innerText = "Start";
+        cancelAnimationFrame(curAnimationFrame);
     } else {
         stopBtn.innerText = "Stop";
-        requestAnimationFrame(doIdle);
+        curAnimationFrame = requestAnimationFrame(doIdle);
     }
 }
 
@@ -141,8 +149,17 @@ function redraw() {
 }
 
 function displayInfo() {
-    let theSpeed = boat.speed;
-    speedGuage.setAttribute("data-value", theSpeed);
+    let prevSpeed = speedEntries[speedIdx];
+    speedEntries[speedIdx] = boat.speed;
+    speedSum += speedEntries[speedIdx] - prevSpeed;
+    let newSpeedAverage = speedSum / SPEED_AVG_ENTRIES;
+    speedIdx = (speedIdx+1) % SPEED_AVG_ENTRIES;
+
+    if (Math.abs(newSpeedAverage - speedAverage) > 0.25) {
+        speedAverage = newSpeedAverage;
+        speedGuage.setAttribute("data-value", speedAverage);
+    }
+    
     boatAngleGuage.setAttribute("data-value",-rad2deg(boat.angle - Math.PI/2));
     let str = "| tilt: " + Math.round(rad2deg( boat.tilt )) + 
             "\n | boom: " + Math.round(rad2deg(boat.boom)) + 
