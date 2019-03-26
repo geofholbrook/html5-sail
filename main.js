@@ -141,7 +141,8 @@ function redraw() {
 }
 
 function displayInfo() {
-    speedGuage.setAttribute("data-value", boat.speed);
+    let theSpeed = boat.speed;
+    speedGuage.setAttribute("data-value", theSpeed);
     boatAngleGuage.setAttribute("data-value",-rad2deg(boat.angle - Math.PI/2));
     let str = "| tilt: " + Math.round(rad2deg( boat.tilt )) + 
             "\n | boom: " + Math.round(rad2deg(boat.boom)) + 
