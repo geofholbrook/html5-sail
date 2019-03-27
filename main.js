@@ -27,7 +27,7 @@ var windCtrl, windDisplay, speedMeter;
 // Time of last animation frame (for controlling framerate)
 var lastFrame = Date.now();
 var curAnimationFrame;
-var stopped = false;
+var stopped = true;
 
 var boatAngleGauge;
 var speedGuage;
