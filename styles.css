@@ -96,7 +96,7 @@ body {
 #dataContainer {
     position: relative;
     display: inline-block;
-    width: 500px;
+    width: 800px;
     border-style: solid;
     border-color: grey;
 }

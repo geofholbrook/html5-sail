@@ -1,20 +1,42 @@
 class BoatInfoDisplay {
     constructor(selector) {
-        this.canvasElement = null;
-        this.ctx = null;
+        this.containerDiv = null;
+        this.hullElement = null;
+        this.hullCtx = null;
+        this.relWindElement = null;
+        this.relWindCtx = null;
+        this.relBoomElement = null;
+        this.relBoomCtx = null;
         this.init(selector);
-        this.draw();
+        this.relWind = 0;
+        this.relBoom = 3.14;
+        this.drawBoat();
+        this.ctx.save();
     }
 
     init(selector) {
-        this.canvasElement = document.getElementById(selector);
-        this.canvasElement.width = 170;
-        this.canvasElement.height = 170;
-        this.ctx = this.canvasElement.getContext("2d"); 
-        this.ctx.width = 100;
+        this.containerDiv = document.getElementById(selector);
+        this.hullElement = document.getElementById("hull");
+        this.ctx = this.hullElement.getContext("2d");
+        this.relWindElement = document.getElementById("relWind");
+        this.relWindCtx = this.relWindElement.getContext("2d");
+        this.relBoomElement = document.getElementById("relBoom");
+        this.relBoomCtx = this.relBoomElement.getContext("2d");
+        this.hullElement.width = 170;
+        this.hullElement.height = 170;
+        this.relWindElement.width = 170;
+        this.relWindElement.height = 170;
     }
 
-    draw() {
+    set relativeWind(value) {
+        this.relWind = value;
+    }
+
+    set relativeBoom(value) {
+        this.relBoom = value;
+    }
+
+    drawBoat() {
         let boatSize = 35;
         // xy coords of boat facing East.
         let boatCoords = [ 	pol2car(boatSize, 0),
@@ -23,11 +45,9 @@ class BoatInfoDisplay {
             pol2car(boatSize, deg2rad(160)),
             pol2car(boatSize/2, deg2rad(70)) ] ;
         let tiltScale = 1;
-        let windColor = "green";
-        let windAngle = Math.PI/4;
         this.ctx.save();
         // var tiltScale = Math.cos (this.tilt);
-        this.ctx.translate(this.canvasElement.width/2, this.canvasElement.height/2);
+        this.ctx.translate(this.hullElement.width/2, this.hullElement.height/2);
 		this.ctx.fillStyle = BOAT_COLOR;
 		this.ctx.strokeStyle = BOAT_COLOR;
 
@@ -45,14 +65,21 @@ class BoatInfoDisplay {
         this.ctx.closePath();
         this.ctx.fill();
         this.ctx.stroke();
-        this.ctx.rotate(Math.PI/2);
-        this.ctx.strokeStyle = windColor;
-        this.ctx.beginPath();
-        this.ctx.moveTo(0, 0);
-        this.ctx.rotate(windAngle);
-        this.ctx.lineTo(0, 100);
-        
-		this.ctx.stroke();
         this.ctx.restore();
+    }
+
+    drawRelWind() {
+        this.relWindCtx.clearRect(0, 0, this.relWindElement.width, this.relWindElement.height);
+        this.relWindCtx.translate(this.relWindElement.width/2, this.relWindElement.height/2);
+        let windColor = "green";
+
+		this.relWindCtx.lineJoin = "round";
+		this.relWindCtx.lineWidth = 5;
+        this.relWindCtx.strokeStyle = windColor;
+        this.relWindCtx.rotate(-this.relWind);
+        this.relWindCtx.beginPath();
+        this.relWindCtx.moveTo(0, 0);
+        this.relWindCtx.lineTo(0, 100);
+        this.relWindCtx.stroke();
     }
 }

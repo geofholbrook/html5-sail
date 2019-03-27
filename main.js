@@ -63,7 +63,6 @@ function init() {
 
     speedGauge = new SpeedGauge("speedGauge");
     boatInfoDisplay = new BoatInfoDisplay("boatInfoDisplay");
-
     waterCanvas.width = MAIN_CANVAS_WIDTH;
     waterCanvas.height = MAIN_CANVAS_HEIGHT;
     windCan.width = MAIN_CANVAS_WIDTH;
@@ -152,10 +151,15 @@ function displayInfo() {
     speedGauge.updateValue(boat.speed);
 
     boatAngleGuage.setAttribute("data-value",-rad2deg(boat.angle - Math.PI/2));
+
+    let relWind = boat.relativeWind;
+    boatInfoDisplay.relativeWind = relWind; 
+    boatInfoDisplay.drawRelWind();
+
     let str = "| tilt: " + Math.round(rad2deg( boat.tilt )) + 
             "\n | boom: " + Math.round(rad2deg(boat.boom)) + 
             "\n | boom-to-wind: " + Math.round(rad2deg( radDiff( boat.angle + boat.boom, wind.angle ))) + 
-            "\n | relativeWind: " + Math.round(rad2deg(boat.relativeWind)) + 
+            "\n | relativeWind: " + Math.round(rad2deg(relWind)) + 
             "\n | sheet: " + Math.round(rad2deg(boat.sheet)) +
             "\n | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";
     document.getElementById("footer").innerText = str;
