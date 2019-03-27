@@ -22,7 +22,7 @@ var minimap, wind, boat, water;
 
 // controls
 var stopBtn, resetPosBtn, frameRateDisplay, rudderDisplay, frameRateCtrl, rudderCtrl;
-var windCtrl, windDisplay, speedMeter;
+var windCtrl, windDisplay, speedMeter, boatInfoDisplay;
 
 // Time of last animation frame (for controlling framerate)
 var lastFrame = Date.now();
@@ -30,7 +30,7 @@ var curAnimationFrame;
 var stopped = true;
 
 var boatAngleGauge;
-var speedGuage;
+var speedGauge;
 
 var speedAverage = 0;
 var speedIdx = 0;
@@ -61,10 +61,8 @@ function init() {
     windDisplay.value = 0;
     windDisplay.disabled = true;
 
-    speedMeter = document.getElementById("speedMeter");
-
-    // boatAngleGuage = document.getElementById("boatAngleGuage");
-    speedGuage = document.getElementById("speedGuage");
+    speedGauge = new SpeedGauge("speedGauge");
+    boatInfoDisplay = new BoatInfoDisplay("boatInfoDisplay");
 
     waterCanvas.width = MAIN_CANVAS_WIDTH;
     waterCanvas.height = MAIN_CANVAS_HEIGHT;
@@ -87,6 +85,7 @@ function init() {
     rudderCtrl.addEventListener("input", onRudderInput, false);
     rudderCtrl.addEventListener("mouseup", onRudderMouseup);
     windCtrl.addEventListener("input", onWindInput, false);
+    
     toggleLoop();
 }
 
@@ -149,22 +148,13 @@ function redraw() {
 }
 
 function displayInfo() {
-    let prevSpeed = speedEntries[speedIdx];
-    speedEntries[speedIdx] = boat.speed;
-    speedSum += speedEntries[speedIdx] - prevSpeed;
-    let newSpeedAverage = speedSum / SPEED_AVG_ENTRIES;
-    speedIdx = (speedIdx+1) % SPEED_AVG_ENTRIES;
 
-    if (Math.abs(newSpeedAverage - speedAverage) > 0.25) {
-        speedAverage = newSpeedAverage;
-        speedGuage.setAttribute("data-value", speedAverage);
-    }
-    
+    speedGauge.updateValue(boat.speed);
+
     boatAngleGuage.setAttribute("data-value",-rad2deg(boat.angle - Math.PI/2));
     let str = "| tilt: " + Math.round(rad2deg( boat.tilt )) + 
             "\n | boom: " + Math.round(rad2deg(boat.boom)) + 
             "\n | boom-to-wind: " + Math.round(rad2deg( radDiff( boat.angle + boat.boom, wind.angle ))) + 
-            "\n | forward thrust " + Math.sin (boat.boom) * Math.sin (boat.angle + boat.boom) +
             "\n | relativeWind: " + Math.round(rad2deg(boat.relativeWind)) + 
             "\n | sheet: " + Math.round(rad2deg(boat.sheet)) +
             "\n | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";

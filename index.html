@@ -5,6 +5,8 @@
 		<script src="./lib/math.js"></script>
 		<script src="./lib/hsl2rgb.js"></script>
 		<script src="./lib/radial-guage.js"></script>
+		<script src="./lib/components/speed-gauge.js"></script>
+		<script src="./boat-info-display.js"></script>
 		<script src="./water.js"></script>
 		<script src="./boat.js"></script>
 		<script src="./wind.js"></script>
@@ -12,10 +14,11 @@
 		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<body> 
-		<h1 id="header">Sailing Sim</h1>
+		<div id="topBar">
+			<span id="appName">Sailing Sim</span>
 			<div id="simControls">
-					<button id="stopBtn" class="dashboardBtn">Stop</button>
-					<button id="resetPosBtn" class="dashboardBtn">Reset Boat to Center</button>
+				<button id="stopBtn" class="dashboardBtn">Stop</button>
+				<button id="resetPosBtn" class="dashboardBtn">Reset Boat to Center</button>
 				<div id="frameRateContainer" class="sliderContainer">
 					<span>Frame Rate</span>
 					<input type="text" id="frameRateDisplay"></textbox>
@@ -24,6 +27,7 @@
 					</div>
 				</div>
 			</div>
+		</div>
 		<div id="viewsContainer">
 			<div id="miniMap">
 				<canvas id="miniMapCanvas"></canvas>
@@ -34,42 +38,21 @@
 				</canvas>
 				<canvas id="windCanvas" class="mainCanvas overlay"></canvas>
 			</div>
-
 		</div>
-			<div id="dataContainer">
+		<div id="dataContainer">
+			<div class="dataItem">
+				<span>Speed</span>
 				<div class="guageContainer">
-						<canvas id="speedGuage" class="fancyGuage" data-type="radial-gauge"
-						data-animation-rule="elastic"
-						data-width="170"
-						data-height="170"
-						data-animated-value=true
-						data-border-radius="0"
-						data-borders="0"
-						data-bar-begin-circle="0"
-						data-minor-ticks="10"
-						data-value="0"
-						data-min-value="0"
-						data-max-value="15"
-						data-title="KNOTS"
-						data-major-ticks="1,5,10,15"
-						data-ticks-width="1"
-						data-ticks-width-minor="7.5"
-						data-bar-width="5"
-						data-highlights="false"
-						data-color-value-box-shadow="false"
-						data-value-box-stroke="0"
-						data-value-box="true"
-						data-color-value-box-background="false"
-						data-value-int="1"
-						data-value-dec="2"
-						data-animation-duration="45"
-				></canvas>
+					<canvas id="speedGauge" class="fancyGuage"></canvas>
 				</div>
+			</div>
+			<div class="dataItem">
+				<span>Heading</span>
 				<div class="guageContainer">
 					<canvas id="boatAngleGuage" class="fancyGuage" data-type="radial-gauge"
 						data-animated-value="true"
-						data-width="180"
-						data-height="180"
+						data-width="170"
+						data-height="170"
 						data-min-value="0"
 						data-max-value="360"
 						data-major-ticks="N,NE,E,SE,S,SW,W,NW,N"
@@ -113,8 +96,17 @@
 						data-use-min-path="true"
 					></canvas>
 				</div>
+			</div>
+			<div class="dataItem">
+				<span>Relative Wind</span>
+				<div class="guageContainer">
+					<canvas id="boatInfoDisplay"></canvas>
+				</div>
+			</div>
+			<div class="dataItem">
 				<div class="footer" id="footer"> left/right = rudder;</div>
 			</div>
+		</div>
 		<div id="dashboardContainer">
 			<div id="boatControls">
 				<div id="wheelContainer" class="sliderContainer">
