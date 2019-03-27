@@ -37,7 +37,7 @@ class BoatInfoDisplay {
     }
 
     drawBoat() {
-        let boatSize = 35;
+        let boatSize = 40;
         // xy coords of boat facing East.
         let boatCoords = [ 	pol2car(boatSize, 0),
             pol2car(boatSize/2, deg2rad(-70)),
@@ -52,7 +52,7 @@ class BoatInfoDisplay {
 		this.ctx.strokeStyle = BOAT_COLOR;
 
 		this.ctx.lineJoin = "round";
-		this.ctx.lineWidth = Math.abs( tiltScale / 20 ) + 5;
+		this.ctx.lineWidth = 1;
         this.ctx.rotate(-Math.PI/2);
 		this.ctx.beginPath();
 		this.ctx.moveTo (boatCoords[0].x, boatCoords[0].y * tiltScale);
@@ -71,10 +71,10 @@ class BoatInfoDisplay {
         this.relWindCtx.save();
         this.relWindCtx.clearRect(0, 0, this.relWindElement.width, this.relWindElement.height);
         this.relWindCtx.translate(this.relWindElement.width/2+5, this.relWindElement.height/2);
-        let windColor = "green";
+        let windColor = "rgb(36, 100, 160)";
 
 		this.relWindCtx.lineJoin = "round";
-		this.relWindCtx.lineWidth = 5;
+		this.relWindCtx.lineWidth = 1.6;
         this.relWindCtx.strokeStyle = windColor;
         // this.relWindCtx.rotate(this.relWind);
         this.relWindCtx.rotate(deg2rad(-90));
@@ -82,10 +82,27 @@ class BoatInfoDisplay {
         // this.relWindCtx.moveTo(this.relWindElement.width/2, this.relWindElement.height/2);
         // this.relWindCtx.moveTo(this.relWindElement.width/2, this.relWindElement.height/2);
         
-        this.relWindCtx.moveTo(0, 0);
-        this.relWindCtx.rotate(this.relWind + Math.PI/2);
-        this.relWindCtx.lineTo(0, -100);
+        let mainLineAngle = this.relWind + Math.PI/2;
+        let arrowSideAngle = Math.PI/16;
+        this.relWindCtx.rotate(mainLineAngle);
+        
+        // long arrow line
+        this.relWindCtx.moveTo(0, -20);
+        this.relWindCtx.lineTo(0, -70);
+        this.relWindCtx.moveTo(0, -20);
+
+        // left arrow side
+        this.relWindCtx.rotate(arrowSideAngle);
+        this.relWindCtx.lineTo(0, -30);
+        this.relWindCtx.rotate(-arrowSideAngle);
+        this.relWindCtx.moveTo(0, -20);
+        
+        // right arrow side
+        this.relWindCtx.rotate(-arrowSideAngle);
+        this.relWindCtx.lineTo(0, -30);
+        
         this.relWindCtx.stroke();
         this.relWindCtx.restore();
+        
     }
 }
