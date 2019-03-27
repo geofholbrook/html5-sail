@@ -156,6 +156,10 @@ function displayInfo() {
     boatInfoDisplay.relativeWind = relWind; 
     boatInfoDisplay.drawRelWind();
 
+    let relBoom = boat.boom;
+    boatInfoDisplay.relativeBoom = relBoom;
+    boatInfoDisplay.drawRelBoom();
+
     let str = "| tilt: " + Math.round(rad2deg( boat.tilt )) + 
             "\n | boom: " + Math.round(rad2deg(boat.boom)) + 
             "\n | boom-to-wind: " + Math.round(rad2deg( radDiff( boat.angle + boat.boom, wind.angle ))) + 

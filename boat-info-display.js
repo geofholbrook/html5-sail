@@ -26,6 +26,8 @@ class BoatInfoDisplay {
         this.hullElement.height = 170;
         this.relWindElement.width = 170;
         this.relWindElement.height = 170;
+        this.relBoomElement.width = 170;
+        this.relBoomElement.height = 170;
     }
 
     set relativeWind(value) {
@@ -74,13 +76,11 @@ class BoatInfoDisplay {
         let windColor = "rgb(36, 100, 160)";
 
 		this.relWindCtx.lineJoin = "round";
-		this.relWindCtx.lineWidth = 1.6;
+		this.relWindCtx.lineWidth = 2;
         this.relWindCtx.strokeStyle = windColor;
-        // this.relWindCtx.rotate(this.relWind);
+        
         this.relWindCtx.rotate(deg2rad(-90));
         this.relWindCtx.beginPath();
-        // this.relWindCtx.moveTo(this.relWindElement.width/2, this.relWindElement.height/2);
-        // this.relWindCtx.moveTo(this.relWindElement.width/2, this.relWindElement.height/2);
         
         let mainLineAngle = this.relWind + Math.PI/2;
         let arrowSideAngle = Math.PI/16;
@@ -88,7 +88,7 @@ class BoatInfoDisplay {
         
         // long arrow line
         this.relWindCtx.moveTo(0, -20);
-        this.relWindCtx.lineTo(0, -70);
+        this.relWindCtx.lineTo(0, -80);
         this.relWindCtx.moveTo(0, -20);
 
         // left arrow side
@@ -103,6 +103,27 @@ class BoatInfoDisplay {
         
         this.relWindCtx.stroke();
         this.relWindCtx.restore();
+    }
+
+    drawRelBoom() {
+        this.relBoomCtx.save();
+        this.relBoomCtx.clearRect(0, 0, this.relBoomElement.width, this.relBoomElement.height);
+        this.relBoomCtx.translate(this.relBoomElement.width/2, this.relBoomElement.height/2);
+        let boomColor = "rgb(137, 73, 9)";
+
+		this.relBoomCtx.lineJoin = "round";
+		this.relBoomCtx.lineWidth = 5;
+        this.relBoomCtx.strokeStyle = boomColor;
+        this.relBoomCtx.rotate(deg2rad(90));
+        let theBoomAngle = -this.relBoom + Math.PI/2;
+        this.relBoomCtx.rotate(theBoomAngle);
+        this.relBoomCtx.beginPath();
         
+        // long arrow line
+        this.relBoomCtx.moveTo(0, 0);
+        this.relBoomCtx.lineTo(0, -70);
+        
+        this.relBoomCtx.stroke();
+        this.relBoomCtx.restore();
     }
 }
