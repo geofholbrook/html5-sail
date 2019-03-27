@@ -55,7 +55,6 @@ class BoatInfoDisplay {
 		this.ctx.lineWidth = Math.abs( tiltScale / 20 ) + 5;
         this.ctx.rotate(-Math.PI/2);
 		this.ctx.beginPath();
-
 		this.ctx.moveTo (boatCoords[0].x, boatCoords[0].y * tiltScale);
 		this.ctx.lineTo (boatCoords[1].x, boatCoords[1].y * tiltScale);
 		this.ctx.lineTo (boatCoords[2].x, boatCoords[2].y * tiltScale);
@@ -69,17 +68,24 @@ class BoatInfoDisplay {
     }
 
     drawRelWind() {
+        this.relWindCtx.save();
         this.relWindCtx.clearRect(0, 0, this.relWindElement.width, this.relWindElement.height);
-        this.relWindCtx.translate(this.relWindElement.width/2, this.relWindElement.height/2);
+        this.relWindCtx.translate(this.relWindElement.width/2+5, this.relWindElement.height/2);
         let windColor = "green";
 
 		this.relWindCtx.lineJoin = "round";
 		this.relWindCtx.lineWidth = 5;
         this.relWindCtx.strokeStyle = windColor;
-        this.relWindCtx.rotate(-this.relWind);
+        // this.relWindCtx.rotate(this.relWind);
+        this.relWindCtx.rotate(deg2rad(-90));
         this.relWindCtx.beginPath();
+        // this.relWindCtx.moveTo(this.relWindElement.width/2, this.relWindElement.height/2);
+        // this.relWindCtx.moveTo(this.relWindElement.width/2, this.relWindElement.height/2);
+        
         this.relWindCtx.moveTo(0, 0);
-        this.relWindCtx.lineTo(0, 100);
+        this.relWindCtx.rotate(this.relWind + Math.PI/2);
+        this.relWindCtx.lineTo(0, -100);
         this.relWindCtx.stroke();
+        this.relWindCtx.restore();
     }
 }

@@ -67,6 +67,16 @@ body {
     pointer-events: none;
 }
 
+#boatInfoDisplay {
+    position: relative;
+}
+
+.stackedCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 #dashboardContainer {
     display: inline-block;
 }
