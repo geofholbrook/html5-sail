@@ -1,0 +1,146 @@
+body {
+    min-width: 900px;
+    min-height: 1200px;
+}
+
+#topBar {
+    border-bottom: solid grey; 
+    width: 100%;
+    height: 50px;
+    margin: 20, 0, 20, 0;
+}
+#appName {
+    font-size: 24pt;
+    font-weight: bolder;
+    padding: 10;
+    float: left;
+}
+
+#simControls {
+    border-left: solid;
+    border-color: grey;
+    float: right;
+}
+
+.dashboardBtn {
+    max-height: 30px;
+}
+
+#frameRateContainer {
+    display: inline-block;
+    vertical-align: middle;
+    margin: auto;
+}
+
+/* container for mini-map and zoomView */
+#viewsContainer {
+    margin: 10px;
+}
+
+/* The canvas containing the mini-map */
+#miniMap {
+    margin-right: 10px;
+    height: 305px;
+    width: 305px;
+    display: inline-block;
+}
+
+/* container for the water and wind canvases */
+#zoomView {
+    position: absolute;
+    display: inline-block;
+    height: 305px;
+    width: 500px;
+}
+
+/* the canvas elements for the zoomView */
+#waterCanvas {
+    position: absolute;
+    top:2.5px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#windCanvas {
+    position: absolute;
+    pointer-events: none;
+}
+
+#boatInfoDisplay {
+    position: relative;
+}
+
+.stackedCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#dashboardContainer {
+    display: inline-block;
+}
+
+#boatControls {
+    max-width: 66%;
+    border-style: solid;
+    border-color: grey;
+    display: inline-block;
+}
+
+.dashboardBtn {
+    margin: 10px;
+    height: 50px;
+    min-width: 70px;
+}
+
+.sliderContainer {
+    display: inline-block;
+    margin: auto;
+}
+
+.sliderContainer>input {
+    width: 4ch;
+}
+
+#dataContainer {
+    position: relative;
+    display: inline-block;
+    width: 800px;
+    border-style: solid;
+    border-color: grey;
+}
+
+.dataItem {
+    float: left;
+    border: solid;
+    margin: 5px;
+    text-align: center;
+}
+.dataItem > span {
+    font-size: 16pt;
+    font-weight: bold;
+    display: block;
+    margin: 5%;
+}
+.dataItem > .guageContainer {
+    display: inline-block;
+    height: 180px;
+    width: 180px;
+    align-content: center;
+}
+
+.fancyGuage {
+    display: inline-flex;
+    margin: auto;
+}
+
+.dataItem > .boatInfoDisplay {
+    display: inline-flex;
+    margin: auto;
+}
+
+.footer {
+    display: inline-flex;
+    bottom:0;
+}

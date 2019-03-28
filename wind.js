@@ -1,41 +1,30 @@
+class Wind {
+	constructor(canvasElement, windSpeed=3, startAngle=0) {
+		this.element = canvasElement;
+		this.image = new Image();
+		this.image.src = WIND_IMG_SRC;
+		this.angle = startAngle;
+		this.speed = windSpeed;
+		this.ctx = this.element.getContext("2d");
+		this.windPatt = null;
+		this.image.onload = () => { this.init() };
+	}
 
-var windImage = new Image();
-windImage.src = "lib/wind-arrow.png";
-var windPatt = null;
+	init() {
+		this.ctx.clearRect(-this.element.width/2, -this.element.height/2, this.element.width, this.element.height);
+		this.ctx.translate(this.element.width/2, this.element.height/2);
+		this.windPatt = this.ctx.createPattern(this.image,'repeat');
+		this.drawWind();
+	}
 
-var windAngle = 0.0;  // always will display this way.
-
-var windCounter = 0;
-var windSpeed = 3;
-
-function drawWind(ctx)
-{
-	ctx.save();
-	ctx.globalAlpha = 0.15;
-	ctx.fillStyle = windPatt;
-
-	//wind doesn't move, can't figure it out how to make that work
-	//windCounter = (windCounter + windSpeed) % 75;
-
-	
-    var offset = { x: modulo( -boat.pos.x, windImage.width ),
-				   y: modulo(  boat.pos.y, windImage.height )  };		
-
-	// ctx.translate(windCounter + offset.x, offset.y);
-	ctx.translate(offset.x, offset.y);
-	
-	//ctx.rotate(-windAngle);
-    
-
-	// made double size so that it fills the screen
-    ctx.fillRect(-can.width, -can.height, can.width * 2, can.height * 2);
-
-    ctx.globalAlpha = 1;
-    ctx.restore();
+	drawWind() {
+		this.ctx.save();
+		this.ctx.globalAlpha = 0.15;
+		this.ctx.fillStyle = this.windPatt;
+		this.ctx.clearRect(-this.element.width, -this.element.height, this.element.width * 2, this.element.height * 2);
+		this.ctx.rotate(-this.angle);
+		this.ctx.fillRect(-this.element.width, -this.element.height, this.element.width * 2, this.element.height * 2);
+		this.ctx.globalAlpha = 1;
+		this.ctx.restore();
+	}
 }
-
-function angleToSail(boat)
-{
-
-}
-

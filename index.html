@@ -1,213 +1,133 @@
-
 <html> 
-
 	<head>
-		<title>sail boat simulator in progress</title> 
-		<script type="text/javascript" src="lib/math.js" ></script>	
-		<script type="text/javascript" src="boat.js" ></script>
-		<script type="text/javascript" src="wind.js" ></script>		
-
+		<title>sail boat simulator</title> 
+		<script src="./minimap.js"></script>
+		<script src="./lib/math.js"></script>
+		<script src="./lib/hsl2rgb.js"></script>
+		<script src="./lib/radial-guage.js"></script>
+		<script src="./lib/components/speed-gauge.js"></script>
+		<script src="./boat-info-display.js"></script>
+		<script src="./water.js"></script>
+		<script src="./boat.js"></script>
+		<script src="./wind.js"></script>
+		<script src="main.js"></script>	
+		<link rel="stylesheet" href="styles.css" />
 	</head>
-
 	<body> 
-
-	<style>
-	#myCanvas {
-    position: absolute;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin:auto;
-	}	
-
-	.header {
-    position:fixed;
-    top:0;
-    left:50%;
-    margin-left:-200px; /*negative half the width */
-    width:600px;
-    height:25px;
-    }
-
-	.footer {
-    position:fixed;
-    bottom:0;
-    left:50%;
-    margin-left:-200px; /*negative half the width */
-    width:600px;
-    height:25px;
-    }
-	</style>
-
-	<canvas id="myCanvas" width="800" height="500" tabindex='1'>
-		fallback
-	</canvas> <br>
-
-	<div class="header" id="header"> sailing simulator (work in progress) (c) Geof Holbrook</div>
-	<div class="footer" id="footer"> left/right = rotate the boat;  up/down = let out / pull in the sheet </div>
-
-	<script>
-
- 		var zoom = 1;
- 		var boat = new Boat();
-
-		function drawBG() {
-
-			ctx.save();
-
-			var w = waterImage.width; var h = waterImage.height;
-			
-			var offset = { x: modulo( -boat.pos.x, w ),
-						   y: modulo(  boat.pos.y, h )  };	
-
-			ctx.translate( offset.x, offset.y );  // changes reference for water pattern
-
-			ctx.fillStyle = bgPatt;
-
-			// coords adjusted to correspond to canvas
-		    ctx.fillRect(-can.width/2 - offset.x, -can.height/2 - offset.y, 
-		    			  can.width   + offset.x,  can.height   + offset.y);  
-
-		    ctx.restore();
-		}
-
-		function displayInfo() {
-			str = "boat angle: " + Math.round( rad2deg( boat.angle )) + 
-				   " | tilt: " + Math.round(rad2deg( boat.tilt )) + 
-				   " | boom-to-wind: " + Math.round(rad2deg( radDiff( boat.angle + boat.boom, windAngle ))) + 
-				   " | forward thrust " + Math.sin (boat.boom) * Math.sin (boat.angle + boat.boom) +
-				   " | speed: " + boat.speed + 
-				   " | pos: (" + Math.round(boat.pos.x) + ", " + Math.round(boat.pos.y) + ")";
-
-			document.getElementById("footer").innerHTML = str;
-		
-		}
-
-
-		function getMousePos(canvas, evt) {
-			var rect = canvas.getBoundingClientRect();
-			return {
-				x: evt.clientX - rect.left,
-				y: evt.clientY - rect.top
-			} 
-		};
-
-		function doMouse(event)
-		{
-			var pos = getMousePos(can, event);
-
-			var polar = car2pol( { x: pos.x - (can.width/2), 
-								   y: -( pos.y - (can.height/2) ) });
-
-			// boat.angle = polar.azi;
-			// boat.speed = polar.dist / 10;
-		}
-
-		function doClick(event)
-		{
-			var pos = getMousePos(can, event);
-		}
-
-		function doRelease(event) {}
-
-		function doKeyDown(event) {
-		  
-		  switch(event.keyCode) {
-		  	 case 37: // left arrow
-		  	 boat.angle = modulo(boat.angle + 0.15 + Math.PI, Math.PI*2) - Math.PI;
-		  	 //boat.tilt += -0.1;
-
-		  	 break;
-
-		  	 case 39: // right arrow
-		  	 boat.angle = modulo(boat.angle - 0.15 + Math.PI, Math.PI*2) - Math.PI;
-		  	 //boat.tilt += 0.1;
-
-		  	 break;	
-		  	 
-		  	 case 38: // up arrow
-		  	 //boat.speed += 5; 
-		  	 boat.sheet = clip(boat.sheet+0.1, 0, 1.4);
-		  	 break;
-		  	 
-		  	 case 40: // down arrow
-		  	 boat.sheet = clip(boat.sheet-0.1, 0, 1.4);
-		  	 break;	
-		  }
-
-		}
-
-		function doMouseWheel(event) {
-
-			accel = event.wheelDelta / 50;
-
-			boat.speed = Math.round( Math.max(0, boat.speed + accel) );
-		}
-
-
-		function redraw() {
-
-			clearCanvas();
-
-			drawBG();
-		    drawWind(ctx);
-
-			boat.draw(ctx);
-
-			//displayInfo(); 
-		}
-
-
-		function doIdle(event) {
-
-			boat.updatePos();
-			redraw();	
-			
-		}
-
-		function clearCanvas(event) {
-		
-			ctx.clearRect(-can.width/2, -can.height/2, can.width, can.height);
-
-			//make border
-			//ctx.strokeStyle = "#000000";
-			//ctx.strokeRect(-can.width/2, -can.height/2, can.width, can.height);	
-		}
-
-		var can = document.getElementById("myCanvas");
-		var ctx = can.getContext("2d");
-
-		
-		var waterImage = new Image();
-		waterImage.src = 'lib/water-texture-3.jpg';
-		var bgPatt = null;
-
-		ctx.translate(can.width/2, can.height/2);
-
-
-		waterImage.onload = function() {
-			bgPatt = ctx.createPattern(waterImage,'repeat');
-			can.focus();
-			redraw();
-		}
-
-		windImage.onload = function() {
-			windPatt = ctx.createPattern(windImage,'repeat');
-			redraw();
-		}
-
-		can.addEventListener("mousemove", doMouse, false);
-		can.addEventListener("mousedown", clearCanvas, false);
-		can.addEventListener("mouseup", doRelease, false);
-		can.addEventListener("keydown", doKeyDown, false);
-
-		can.addEventListener("mousewheel", doMouseWheel, false);
-
-		setInterval(doIdle, 50);
-
-	</script>
-
-</body>
-
+		<div id="topBar">
+			<span id="appName">Sailing Sim</span>
+			<div id="simControls">
+				<button id="stopBtn" class="dashboardBtn">Stop</button>
+				<button id="resetPosBtn" class="dashboardBtn">Reset Boat to Center</button>
+				<div id="frameRateContainer" class="sliderContainer">
+					<span>Frame Rate</span>
+					<input type="text" id="frameRateDisplay"></textbox>
+					<div>
+						<input id="frameRateCtrl" type="range" min="10" max="60"/>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="viewsContainer">
+			<div id="miniMap">
+				<canvas id="miniMapCanvas"></canvas>
+			</div>
+			<div id="zoomView">
+				<canvas id="waterCanvas" class="mainCanvas" tabindex='1'>
+					fallback
+				</canvas>
+				<canvas id="windCanvas" class="mainCanvas overlay"></canvas>
+			</div>
+		</div>
+		<div id="dataContainer">
+			<div class="dataItem">
+				<span>Speed</span>
+				<div class="guageContainer">
+					<canvas id="speedGauge" class="fancyGuage"></canvas>
+				</div>
+			</div>
+			<div class="dataItem">
+				<span>Heading</span>
+				<div class="guageContainer">
+					<canvas id="boatAngleGuage" class="fancyGuage" data-type="radial-gauge"
+						data-animated-value="true"
+						data-width="170"
+						data-height="170"
+						data-min-value="0"
+						data-max-value="360"
+						data-major-ticks="N,NE,E,SE,S,SW,W,NW,N"
+						data-minor-ticks="22"
+						data-ticks-angle="360"
+						data-start-angle="180"
+						data-stroke-ticks="false"
+						data-highlights="false"
+						data-color-plate="#33a"
+						data-color-major-ticks="#f5f5f5"
+						data-color-minor-ticks="#ddd"
+						data-color-numbers="#ccc"
+						data-color-needle="rgba(240, 128, 128, 1)"
+						data-color-needle-end="rgba(255, 160, 122, .9)"
+						data-value-box="false"
+						data-value-text-shadow="false"
+						data-color-circle-inner="#fff"
+						data-color-needle-circle-outer="#ccc"
+						data-needle-circle-size="15"
+						data-needle-circle-outer="false"
+						data-animation-rule="linear"
+						data-needle-type="line"
+						data-needle-start="75"
+						data-needle-end="99"
+						data-needle-width="3"
+						data-borders="true"
+						data-border-inner-width="0"
+						data-border-middle-width="0"
+						data-border-outer-width="4"
+						data-color-border-outer="#ccc"
+						data-color-border-outer-end="#ccc"
+						data-color-needle-shadow-down="#222"
+						data-border-shadow-width="0"
+						data-animation-target="plate"
+						data-units="ᵍ"
+						data-title="HEADING"
+						data-font-title-size="19"
+						data-font-numbers-size="25"
+						data-color-title="#f5f5f5"
+						data-animation-duration="15"
+						data-use-min-path="true"
+					></canvas>
+				</div>
+			</div>
+			<div class="dataItem">
+				<span>Relative Wind</span>
+				<div class="guageContainer">
+					<div id="boatInfoDisplay">
+						<canvas id="hull" class="stackedCanvas"></canvas>
+						<canvas id="relWind" class="stackedCanvas"></canvas>
+						<canvas id="relBoom" class="stackedCanvas"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="dataItem">
+				<div class="footer" id="footer"> left/right = rudder;</div>
+			</div>
+		</div>
+		<div id="dashboardContainer">
+			<div id="boatControls">
+				<div id="wheelContainer" class="sliderContainer">
+					<span>Rudder Angle</span>
+					<input type="text" id="rudderDisplay"></textbox>
+					<div>
+						<input id="rudderCtrl" type="range" min="-0.78" max="0.78" step="0.01" />
+					</div>
+				</div>
+				<div id="windContainer" class="sliderContainer">
+					<span>Wind Angle</span>
+					<input type="text" id="windDisplay"></textbox>
+					<div>
+						<input id="windCtrl" type="range" min="-3.14" max="3.14" step="0.01" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>
